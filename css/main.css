@@ -1,0 +1,45 @@
+* {
+    /* margin: 0;
+    padding: 0; */
+
+    box-sizing: border-box;
+
+}
+
+body {
+    text-align: center;
+    /* direction: rtl; → for hebrew */
+    color: black;
+
+
+    
+    background-color: cornsilk;
+    background-image: url("img/sky.gif");
+    background-repeat: repeat;
+
+}
+
+table.game-table {
+    border: 0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+.cell {
+    transition: all 0.3s;
+    height: 40px;
+    width: 40px;
+}
+
+.cell img {
+    max-height: 40px;
+    max-width: 40px;
+}
+
+.sky,
+.hero {
+    background-color: black;
+}

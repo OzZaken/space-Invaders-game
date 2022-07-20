@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Invaders</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+
+<body onload="init()" onkeydown="onKeyDown(event)">
+    <!-- onkeydown="onKeyDown(event)": may be only event.key -->
+    <h1>Space Invaders</h1>
+    <hr />
+
+    <div hidden class="game-container">
+        <!-- TODO: Put in CSS -->
+        <table class="game-table" border="0" cellspacing="0" cellpadding="0">
+            <tbody class="board"></tbody>
+        </table>
+    </div>
+
+
+
+    <div class="info"></div>
+
+
+    <script src="js/util.js"></script>
+    <script src="js/hero.js"></script>
+    <script src="js/alien.js"></script>
+    <script src="js/game.js"></script>
+</body>
+
+</html>
