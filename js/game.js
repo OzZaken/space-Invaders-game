@@ -1,7 +1,5 @@
 'sue strict'
 
-// TODO: 
-//? ObjectMap?
 const CLASSES = { //* classes CSS
     sky: 'sky',
     hero: 'hero'
@@ -9,88 +7,97 @@ const CLASSES = { //* classes CSS
 const OBJECTS = { //* ImgPath
     alien: 'alien',
     hero: 'hero',
-    empty:  getImgPath(CLASSES.sky),
-    laser: 'laser'
+    empty: getImgPath(CLASSES.sky), // 🐞
+    laser: 'laser',
+    rocket: 'rocket'
 }
-///////////////////////////////////////////////////////////////////////////////////////////////
 
 const GAME = { //* Game data 
-    isOn: false,
-    aliensCount: 0,
-    // currHardLvlIdx: 0
+    isOn: null, // false on init true in initGame
+    aliensCount: null, // ++ when adding to board
+    // currHardLvlIdx: 0 // later
+
+    board: {  //* Board data
+        size: null, // 14
+        aliensRowLength: null, // 8
+        aliensRowCount: null // 3
+    }
 }
-
-const BOARD = { //* Board data
-    size: 14,
-    aliensRowLength: 8,
-    aliensRowCount: 3
-}
-
-
 
 var gBoard
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function init() {
     console.log('Init()↓')
+
     // *init GAME
     GAME.isOn = false
-    // GAME.currHardLvlIdx = 0
+    GAME.aliensCount = 0
+    console.log('GAME:', GAME)
+
     // *init Board
+    GAME.board.size = 14
+    GAME.board.aliensRowLength = 8
+    GAME.board.aliensRowCount = 3
+    console.log('GAME.board:', GAME.board)
     gBoard = buildBoard()
     console.log('gBoard:', gBoard)
 
     //*init Hero
     initHero()
+    console.log('HERO:', HERO)
+
     //*init Aliens
-
-
+    initAliens()
+    console.log('ALIENS:', ALIENS)
 
 
     initGame() // later on button
+    
 }
 
 function initGame() {
-    console.log('InitGame()↓')
-    //* init Game
-    GAME.isOn = true
-    GAME.aliensCount = 0
-    
-    //* init Board
+    //* Start Board
     document.querySelector('.game-container').hidden = false
     renderBoard(gBoard)
 
+
+    //*Start Aliens
     createHero(gBoard)
-    console.log('initGame():')
-    UTBoard()
+    console.log(gBoard)
+
+    //*Start Aliens
+    placeAliensOnBoard()
+
+
+    //* Start Game
+    GAME.isOn = true
+    console.log('GAME:', GAME)
+
+
+    blinkLaser({i:11,j:5})
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 // Create and returns the board with aliens on top, ground at bottom
 // use the functions: createCell, createHero, createAliens
-function buildBoard(ROWS = BOARD.size, COLUMNS = BOARD.size) {
+function buildBoard(ROWS = GAME.board.size, COLUMNS = GAME.board.size) {
     console.log('buildBoard()↓');
     var board = []
     for (var i = 0; i < ROWS; i++) {
         board.push([])
         for (var j = 0; j < COLUMNS; j++) {
-            board[i][j] = createCell()
-            // if (GAME.aliensRowCount === 3) board[i][j] = ''
-            // else if (BOARD.aliensRowCount === 4) board[0][j] = ALIEN.alien
-            // else BOARD[i][j] = HARD_MAPS[currHardLvl][i][j] // May need objectMap
-
+            board[i][j] = {
+                className: CLASSES.sky,
+                gameObject: OBJECTS.empty
+            }
         }
     }
     return board
 }
 
-
-function createCell(gameObject = OBJECTS.empty) {
-    return { className: CLASSES.sky, gameObject: gameObject }
-}
-
 function renderBoard(board) {
-    console.log('renderBoard(board)↓');
+    console.log('← renderBoard(board)');
     var strHTML = ''
     for (var i = 0; i < board.length; i++) {
         strHTML += '<tr>'
@@ -101,22 +108,8 @@ function renderBoard(board) {
         }
         strHTML += '</tr>'
     }
-    var elBoard = document.querySelector('tbody.board')
-    elBoard.innerHTML = strHTML
+    document.querySelector('tbody.board').innerHTML = strHTML
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-function updateCell(pos, gameObject) {
-    var elCell = getElCell(pos)
-
-    // Model
-    gBoard[pos.i][pos.j].gameObject = gameObject
-    gBoard[pos.i][pos.j].className = gameObject
-
-    // Dom
-    elCell.innerHTML = gameObject
-
-
-}
-
-function getElCell(pos) { return document.querySelector(`[data-i='${pos.i}'][data-j='${pos.j}']`) }

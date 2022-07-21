@@ -1,21 +1,13 @@
 * {
-    /* margin: 0;
-    padding: 0; */
-
     box-sizing: border-box;
-
 }
 
 body {
     text-align: center;
-    /* direction: rtl; → for hebrew */
-    color: black;
 
-
-    
-    background-color: cornsilk;
-    background-image: url("img/sky.gif");
-    background-repeat: repeat;
+    background: linear-gradient(0.25turn, #070707, #cec6c6, #062438);
+    /* background-image: url("img/sky.gif"); */
+    /* background-repeat: repeat; */
 
 }
 
