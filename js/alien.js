@@ -29,19 +29,22 @@ function createAliens(num) {
     for (let i = 0; i < num; i++) {
         GAME.aliensCount++
         ALIENS.aliens.push({
-            gameObject: OBJECTS.alien,
+            isAlive: true,
             id: ALIENS.id++
         })
     }
 }
-function placeAliensOnBoard(rowIdxStart = ALIENS.topRowIdx, rowIdxEnd = ALIENS.bottomRowIdx, colIdxStart = 3, colIdxEnd = 10) {
+
+function placeAliens(rowIdxStart = ALIENS.topRowIdx, rowIdxEnd = ALIENS.bottomRowIdx, colIdxStart = 3, colIdxEnd = 10) {
     console.log(`placeAliensOnBoard(${rowIdxStart}, ${rowIdxEnd}, ${colIdxStart}, ${colIdxEnd})`);
     var alienIdx = 0
     for (var i = rowIdxStart; i <= rowIdxEnd; i++) {
         for (var j = colIdxStart; j <= colIdxEnd; j++) {
 
+            gBoard[i][j].gameObject = OBJECTS.alien
+            gBoard[i][j].imgPath = getImgPath(OBJECTS.alien)
+            gBoard[i][j].id = ALIENS.aliens[alienIdx]
 
-            gBoard[i][j] = ALIENS.aliens[alienIdx]
             updateCell({ i, j }, OBJECTS.alien, null, getImgPath(OBJECTS.alien))
             alienIdx++
         }

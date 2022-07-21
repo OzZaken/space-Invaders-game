@@ -8,19 +8,17 @@ function createCell(pos, gameObject, imgPath, className) {
         className: className
     }
 }
-function updateCell(pos, gameObject = OBJECTS.empty, className = CLASSES.sky,imgPath =  getImgPath(OBJECTS.empty)) {
+function updateCell(pos, gameObject = OBJECTS.empty, className = CLASSES.sky,imgPath =  getImgPath(gameObject)) {
     console.log(`updateCell(${pos},${gameObject})`)
 
     // Model
     gBoard[pos.i][pos.j].gameObject = gameObject
-
     gBoard[pos.i][pos.j].imgPath = imgPath
-
     gBoard[pos.i][pos.j].className = className
 
     //  Dom
     var elCell = getElCell(pos)
-    elCell.innerHTML = imgPath
+    elCell.innerHTML = gBoard[pos.i][pos.j].imgPath
     elCell.classList.add(className)
 
 }

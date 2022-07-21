@@ -65,7 +65,7 @@ function initGame() {
     console.log(gBoard)
 
     //*Start Aliens
-    placeAliensOnBoard()
+    placeAliens()
 
 
     //* Start Game
@@ -95,9 +95,9 @@ function renderBoard(board) {
     for (var i = 0; i < board.length; i++) {
         strHTML += '<tr>'
         for (var j = 0; j < board[0].length; j++) {
-            var cellObj = board[i][j].gameObject
+            var imgPath = board[i][j].imgPath
             var className = board[i][j].className
-            strHTML += `<td data-i="${i}" data-j="${j}" class="cell cell-${i}-${j} ${className}" >${cellObj}</td>`
+            strHTML += `<td data-i="${i}" data-j="${j}" class="cell cell-${i}-${j} ${className}" >${imgPath}</td>`
         }
         strHTML += '</tr>'
     }

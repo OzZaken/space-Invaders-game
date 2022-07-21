@@ -5,9 +5,7 @@ const HERO = {}
 function initHero() {
     console.log('initHero()↓');
     //* init HERO
-    HERO.className = CLASSES.hero
     HERO.pos = { i: 12, j: 5 }
-    gBoard[12][5] = HERO
     //* init Shootings
     HERO.laserInterval = null // on shoot()
     HERO.laserPos = null // on shoot()
@@ -19,8 +17,8 @@ function initHero() {
 
 }
 function createHero() {
-    createCell(HERO.pos, OBJECTS.hero,getImgPath(OBJECTS.hero))
-    gBoard[HERO.pos.i][HERO.pos.j].
+    gBoard[HERO.pos.i][HERO.pos.j].gameObject = OBJECTS.hero
+    updateCell(HERO.pos,OBJECTS.hero)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
