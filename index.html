@@ -8,10 +8,8 @@
     <title>Space Invaders</title>
     <link rel="stylesheet" href="css/main.css">
 </head>
-
-
-<body onload="init()" onkeydown="onKeyDown(event)">
-    <!-- onkeydown="onKeyDown(event)": may be only event.key -->
+<body onload="init()" onkeydown="getNextLocation(event)">
+    
     <h1>Space Invaders</h1>
     <hr />
 
@@ -21,11 +19,7 @@
             <tbody class="board"></tbody>
         </table>
     </div>
-
-
-
     <div class="info"></div>
-
 
     <script src="js/util.js"></script>
     <script src="js/hero.js"></script>

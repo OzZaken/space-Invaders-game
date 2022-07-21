@@ -4,28 +4,26 @@ const CLASSES = { //* classes CSS
     sky: 'sky',
     hero: 'hero'
 }
-const OBJECTS = { //* ImgPath
+const OBJECTS = {
     alien: 'alien',
     hero: 'hero',
-    empty: getImgPath(CLASSES.sky), // 🐞
+    empty: 'empty',
     laser: 'laser',
+    floor: 'floor',
     rocket: 'rocket'
 }
+
 
 const GAME = { //* Game data 
     isOn: null, // false on init true in initGame
     aliensCount: null, // ++ when adding to board
-    // currHardLvlIdx: 0 // later
-
     board: {  //* Board data
         size: null, // 14
         aliensRowLength: null, // 8
         aliensRowCount: null // 3
     }
 }
-
 var gBoard
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function init() {
     console.log('Init()↓')
@@ -50,12 +48,12 @@ function init() {
     //*init Aliens
     initAliens()
     console.log('ALIENS:', ALIENS)
+    ALIENS.id = null
 
 
     initGame() // later on button
-    
-}
 
+}
 function initGame() {
     //* Start Board
     document.querySelector('.game-container').hidden = false
@@ -74,8 +72,6 @@ function initGame() {
     GAME.isOn = true
     console.log('GAME:', GAME)
 
-
-    blinkLaser({i:11,j:5})
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -87,10 +83,7 @@ function buildBoard(ROWS = GAME.board.size, COLUMNS = GAME.board.size) {
     for (var i = 0; i < ROWS; i++) {
         board.push([])
         for (var j = 0; j < COLUMNS; j++) {
-            board[i][j] = {
-                className: CLASSES.sky,
-                gameObject: OBJECTS.empty
-            }
+            board[i][j] = createCell({ i, j }, OBJECTS.empty, getImgPath(OBJECTS.empty), CLASSES.sky,)
         }
     }
     return board
@@ -109,7 +102,5 @@ function renderBoard(board) {
         strHTML += '</tr>'
     }
     document.querySelector('tbody.board').innerHTML = strHTML
-
 }
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
