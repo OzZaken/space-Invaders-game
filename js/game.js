@@ -5,9 +5,11 @@ const OBJECTS = {
     hero: 'hero',
     empty: 'empty',
     laser: 'laser',
+    laserGif: 'laser-2s',
     floor: 'floor',
     rocket: 'rocket',
-    explode: 'explode'
+    explode: 'explode',
+    satelliteSpace: 'satellite-space'
 }
 const GAME = { // Game data 
     isOn: null, // false on init true in initGame
@@ -22,15 +24,14 @@ var gBoard
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function init() {
     //init GAME
+    GAME.score = 0
     GAME.isOn = false
     GAME.aliensCount = 0
-    GAME.intervals = {}
     // init Board
     GAME.board.size = 14
     GAME.board.aliensRowLength = 8
     GAME.board.aliensRowCount = 3
     gBoard = buildBoard()
-    console.log('gBoard:', gBoard)
     // init Hero
     initHero()
     // init Aliens
@@ -44,28 +45,36 @@ function initGame() {
 
     // Aliens
     createHero(gBoard)
-    console.log(gBoard)
 
     // Aliens
     placeAliens()
 
     // Game
-    updateScore(0)
+    elScore = document.querySelector('.game-container span.score').innerText = 0
     GAME.isOn = true
+
+    console.log(GAME);
+    console.log(ALIENS);
+    console.log(HERO);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function buildBoard(ROWS = GAME.board.size, COLUMNS = GAME.board.size) {
-    console.log('buildBoard()↓');
+    // console.log('buildBoard()↓');
     var board = []
     for (var i = 0; i < ROWS; i++) {
         board.push([])
         for (var j = 0; j < COLUMNS; j++) {
             board[i][j] = createCell({ i, j })
         }
+
     }
+    board[7][1].gameObject = OBJECTS.satelliteSpace
+    board[0][12].gameObject = OBJECTS.satelliteSpace
+    board[13][11].gameObject = OBJECTS.satelliteSpace
+
+
     return board
 }
-
 function renderBoard(board) {
     console.log('← renderBoard(board)');
     var strHTML = ''
@@ -74,7 +83,7 @@ function renderBoard(board) {
         for (var j = 0; j < board[0].length; j++) {
             var imgPath = gBoard[i][j].gameObject
             strHTML += `<td data-i="${i}" data-j="${j}" class="cell" >${getGifPath(imgPath)}</td>`
-            
+
         }
         strHTML += '</tr>'
     }

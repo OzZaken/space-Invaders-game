@@ -11,6 +11,11 @@ body {
 
 }
 
+h1 {
+    color: #062438;
+    font-size: 3em;
+    font-family: 'Times New Roman', Times, serif;
+}
 .game-container .game-status {
     font-size: 2rem;
     position: absolute;

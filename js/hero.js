@@ -9,6 +9,7 @@ function initHero() {
     // init Shootings
     HERO.laserInterval = null
     HERO.laser = {
+        blinkingInterval: null,
         speed: 80,
         nextLaserPos: null, //{}
         pos: null, // {}
@@ -63,52 +64,55 @@ function moveHero(dir) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function shoot(pos, shottingType = OBJECTS.laser) {
     // console.log(`shoot(${shottingType} = ${OBJECTS.laser})`)
-    
+
     HERO.isShoot = true
     HERO.laser.pos = { i: pos.i + HERO.laser.movingDiff, j: HERO.pos.j }
 
-    if (shottingType === OBJECTS.laser) {
-        HERO.laserInterval = setInterval(blinkLaser, HERO.laser.speed, HERO.laser.pos)
-    }
+    // if (shottingType === OBJECTS.laser) {
+    HERO.laserInterval = setInterval(blinkLaser, HERO.laser.speed, HERO.laser.pos)
+    // }
     // else if (missile === OBJECTS.rocket) console.log('shooting rocket')
     return
 }
-
 function endShoot() {
     clearInterval(HERO.laserInterval)
     HERO.isShoot = false
     HERO.laserInterval = null
-    renderBoard()
+    renderBoard(gBoard)
 }
-
 function blinkLaser(pos) {
+    if (gBoard[pos.i][pos.j].gameObject === OBJECTS.alien) {
+        console.log('(gBoard[pos.i][pos.j].gameObject === OBJECTS.alien) ');
+        endShoot()
+    }
     if (!pos.i || pos.i <= 0) {
         console.log('(!pos.i || pos.i <= 0)');
         endShoot()
         return
     }
-
     else
-    console.log('HERO.laser.pos:', HERO.laser.pos) 
-
-        var prevLaserPos = {
-            i: HERO.laser.pos.i + 1,
-            j: HERO.laser.pos.j
-        }
-
-
-    console.log('gBoard[prevLaserPos.i][prevLaserPos.j].gameObject:', gBoard[prevLaserPos.i][prevLaserPos.j].gameObject)
-
+        console.log('HERO.laser.pos:', HERO.laser.pos)
+    var prevLaserPos = {
+        i: HERO.laser.pos.i + 1,
+        j: HERO.laser.pos.j
+    }
     console.log('prevLaserPos:', prevLaserPos)
-    renderCell(prevLaserPos, OBJECTS.laser)
-    setTimeout(() => { renderCell(prevLaserPos)}, HERO.laser.speed / 2)
-
-    renderCell(HERO.laser.pos, OBJECTS.laser)
-    // setTimeout(() => { renderCell(HERO.laser.pos) }, HERO.laser.speed / 2)
-
+    console.log('gBoard[prevLaserPos.i][prevLaserPos.j].gameObject:', gBoard[prevLaserPos.i][prevLaserPos.j].gameObject)
     console.log('gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject:', gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject)
-    if (gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject === OBJECTS.alien)  handleAlienHit(pos)
-       
-    HERO.laser.pos.i = HERO.laser.pos.i + HERO.laser.movingDiff
+for (let i = 0; i < 2; i++) {
+    blinkingCell(prevLaserPos)
+    blinkingCell(HERO.laser.pos)
 }
 
+    if (gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject === OBJECTS.alien) {
+        console.log('gBoard[HERO.laser.pos.i][HERO.laser.pos.j]:', gBoard[HERO.laser.pos.i][HERO.laser.pos.j])
+        handleAlienHit(pos)
+        return
+    }
+    HERO.laser.pos.i = HERO.laser.pos.i + HERO.laser.movingDiff
+    return
+}
+function blinkingCell(pos) {
+    renderCell(pos, OBJECTS.laser)
+    setTimeout(renderCell, HERO.laser.speed / 2, pos) 
+}

@@ -1,6 +1,8 @@
 'use strict'
 
 const ALIENS = {
+    aliens: null,
+    id: null,
     speed: null, // 500
     topRowIdx: null, // 1
     bottomRowIdx: null, // 3 
@@ -10,20 +12,26 @@ const ALIENS = {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function initAliens() {
     console.log('initAliens():↓');
+    
+    ALIENS.id = 1
+    ALIENS.aliens ={}
     ALIENS.speed = 1000
     ALIENS.topRowIdx = 1
     ALIENS.bottomRowIdx = 3
     ALIENS.isFreeze = false
     ALIENS.aliens = []
 }
-
 function placeAliens(rowIdxStart = ALIENS.topRowIdx, rowIdxEnd = ALIENS.bottomRowIdx, colIdxStart = 3, colIdxEnd = 10) {
-    console.log(`placeAliensOnBoard(${rowIdxStart}, ${rowIdxEnd}, ${colIdxStart}, ${colIdxEnd})`);
+    // console.log(`placeAliensOnBoard(${rowIdxStart}, ${rowIdxEnd}, ${colIdxStart}, ${colIdxEnd})`);
 
-    var aliensCount = GAME.board.aliensRowLength * GAME.board.aliensRowCount
+    GAME.aliensCount = GAME.board.aliensRowLength * GAME.board.aliensRowCount
     for (var i = rowIdxStart; i <= rowIdxEnd; i++) {
         for (var j = colIdxStart; j <= colIdxEnd; j++) {
-            gBoard[i][j].gameObject = OBJECTS.alien
+            ALIENS.aliens.push({
+                id: ALIENS.id++,
+                isHit: false,
+                currPos:{i,j}
+            })
             updateCell({ i, j }, OBJECTS.alien)
         }
     }
@@ -31,10 +39,15 @@ function placeAliens(rowIdxStart = ALIENS.topRowIdx, rowIdxEnd = ALIENS.bottomRo
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function handleAlienHit(pos) {
-    console.log(`handleAlienHit(pos)`);
+    console.log(`handleAlienHit(${pos.i},${pos.j})`);
+
     updateCell(pos, OBJECTS.explode)
+    setTimeout(updateCell,800,pos)
+    var whatAppendToU = {
+        i:pos.i + 1,
+        j:pos.j 
+    }
     updateScore(10)
-    setTimeout(() => { updateCell(pos) }, 1000)
     endShoot()
     return
 }
