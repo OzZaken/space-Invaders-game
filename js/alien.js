@@ -1,12 +1,11 @@
 'use strict'
 
-const ALIENS = { //* Aliens data
+const ALIENS = {
     speed: null, // 500
-    topRowIdx: null, //
-    bottomRowIdx: null,
-    isFreeze: null, // Boolean
+    topRowIdx: null, // 1
+    bottomRowIdx: null, // 3 
+    isFreeze: null, // 
     aliens: null, // []
-    interval: null,
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function initAliens() {
@@ -16,37 +15,16 @@ function initAliens() {
     ALIENS.bottomRowIdx = 3
     ALIENS.isFreeze = false
     ALIENS.aliens = []
-    ALIENS.interval = null
-    ALIENS.id = 101
-
-    createAliens(GAME.board.aliensRowLength * GAME.board.aliensRowCount)
-    console.log('ALIENS.aliens:', ALIENS.aliens)
-
-}
-function createAliens(num) {
-    console.log(`createAliens(${num}):↓`);
-
-    for (let i = 0; i < num; i++) {
-        GAME.aliensCount++
-        ALIENS.aliens.push({
-            isAlive: true,
-            id: ALIENS.id++
-        })
-    }
 }
 
 function placeAliens(rowIdxStart = ALIENS.topRowIdx, rowIdxEnd = ALIENS.bottomRowIdx, colIdxStart = 3, colIdxEnd = 10) {
     console.log(`placeAliensOnBoard(${rowIdxStart}, ${rowIdxEnd}, ${colIdxStart}, ${colIdxEnd})`);
-    var alienIdx = 0
+
+    var aliensCount = GAME.board.aliensRowLength * GAME.board.aliensRowCount
     for (var i = rowIdxStart; i <= rowIdxEnd; i++) {
         for (var j = colIdxStart; j <= colIdxEnd; j++) {
-
             gBoard[i][j].gameObject = OBJECTS.alien
-            gBoard[i][j].imgPath = getImgPath(OBJECTS.alien)
-            gBoard[i][j].id = ALIENS.aliens[alienIdx]
-
-            updateCell({ i, j }, OBJECTS.alien, null, getImgPath(OBJECTS.alien))
-            alienIdx++
+            updateCell({ i, j }, OBJECTS.alien)
         }
     }
     return
@@ -54,6 +32,11 @@ function placeAliens(rowIdxStart = ALIENS.topRowIdx, rowIdxEnd = ALIENS.bottomRo
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function handleAlienHit(pos) {
     console.log(`handleAlienHit(pos)`);
+    updateCell(pos, OBJECTS.explode)
+    updateScore(10)
+    setTimeout(() => { updateCell(pos) }, 1000)
+    endShoot()
+    return
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function shiftBoardRight(board, fromI, toI) {

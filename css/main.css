@@ -4,14 +4,23 @@
 
 body {
     text-align: center;
-
-    background: linear-gradient(0.25turn, #070707, #cec6c6, #062438);
+    color: #cec6c6;
+    background: linear-gradient(0.25turn, #062438, #cec6c6, #070707);
     /* background-image: url("img/sky.gif"); */
     /* background-repeat: repeat; */
 
 }
 
+.game-container .game-status {
+    font-size: 2rem;
+    position: absolute;
+    top: 20%;
+    left: 20px;
+}
+
 table.game-table {
+    box-shadow: 8px 9px 16px 1px #00000052;
+    border-radius: 15px;
     border: 0;
     position: fixed;
     top: 50%;
@@ -20,6 +29,10 @@ table.game-table {
     background-color: black;
 }
 
+/* border="0" cellspacing="0" cellpadding="0"
+td.cell {
+    border: 0;
+} */
 
 .cell {
     transition: all 0.3s;
@@ -32,7 +45,6 @@ table.game-table {
     max-width: 40px;
 }
 
-.sky,
-.hero {
+.cell {
     background-color: black;
 }

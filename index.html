@@ -8,12 +8,17 @@
     <title>Space Invaders</title>
     <link rel="stylesheet" href="css/main.css">
 </head>
+
 <body onload="init()" onkeydown="getNextLocation(event)">
-    
+
     <h1>Space Invaders</h1>
     <hr />
 
     <div hidden class="game-container">
+        <div class="game-status">
+            <div class="score">score: <span class="score"></span></div>
+
+        </div>
         <!-- TODO: Put in CSS -->
         <table class="game-table" border="0" cellspacing="0" cellpadding="0">
             <tbody class="board"></tbody>

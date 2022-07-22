@@ -3,24 +3,22 @@
 const HERO = {}
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function initHero() {
-    console.log('initHero()↓');
-    //* init HERO
+    // init HERO
     HERO.pos = { i: 12, j: 5 }
-    //* init Shootings
-    HERO.laserInterval = null // on shoot()
-    HERO.laserPos = null // on shoot()
-    HERO.laserSpeed = 300// 80
-    HERO.isShoot = false // on shoot()
-    HERO.startShottingAt = null // Date.now()
-
-    // HERO.shootingPos = null // need it?
-
+    HERO.isShoot = false
+    // init Shootings
+    HERO.laserInterval = null
+    HERO.laser = {
+        speed: 80,
+        nextLaserPos: null, //{}
+        pos: null, // {}
+        poss: null, // []
+        movingDiff: -1
+    }
 }
 function createHero() {
-    gBoard[HERO.pos.i][HERO.pos.j].gameObject = OBJECTS.hero
-    updateCell(HERO.pos,OBJECTS.hero)
+    updateCell(HERO.pos, OBJECTS.hero)
 }
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function getNextLocation(eventKeyboard) {
     console.log(eventKeyboard.key)
@@ -33,18 +31,19 @@ function getNextLocation(eventKeyboard) {
         //     console.log('Moving Up↑')
         //     break
         case 'ArrowLeft':
-            console.log('←Moving Left')
             moveHero({ i: HERO.pos.i, j: HERO.pos.j - 1 })
             break
         case 'ArrowRight':
-            console.log('moving Right→')
             moveHero({ i: HERO.pos.i, j: HERO.pos.j + 1 })
             break
         case ' ':
-            console.log('laser Shootings')
+            console.log('HERO.isShoot:', HERO.isShoot)
             if (HERO.isShoot) return
-            HERO.laserPos = { i: HERO.pos.i - 1, j: HERO.pos.j }
-            shoot(OBJECTS.laser)
+            shoot({ i: HERO.pos.i + HERO.laser.movingDiff, j: HERO.pos.j }, OBJECTS.laser)
+            break
+        case 'p':
+            console.log('pause')
+            GAME.isOn = true
             break
         default:
             return null
@@ -54,67 +53,62 @@ function getNextLocation(eventKeyboard) {
 function moveHero(dir) {
     if (dir.j < 0 || dir.j > gBoard[0].length - 1) return
     else if (!GAME.isOn) return
-    // *PrevCell
-    // Model
-    updateCell(HERO.pos, OBJECTS.empty,null,getImgPath(OBJECTS.empty))
-    //Dom
-    // * NextCell
-    // model
+    // PrevCell
+    updateCell(HERO.pos)
+    // NextCell
     HERO.pos.i = dir.i
     HERO.pos.j = dir.j
-    //Dom
-    updateCell(HERO.pos, OBJECTS.hero,null,getImgPath(OBJECTS.hero), CLASSES.sky)
+    updateCell(HERO.pos, OBJECTS.hero)
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-function shoot(shottingType = OBJECTS.laser) {
-    console.log(`shoot(${shottingType} = ${OBJECTS.laser}) :`)
-
+function shoot(pos, shottingType = OBJECTS.laser) {
+    // console.log(`shoot(${shottingType} = ${OBJECTS.laser})`)
+    
     HERO.isShoot = true
+    HERO.laser.pos = { i: pos.i + HERO.laser.movingDiff, j: HERO.pos.j }
+
     if (shottingType === OBJECTS.laser) {
-        console.log('shooting laser')// 
-        HERO.startShootingAt = Date.now()
-
-
-        HERO.laserInterval = setInterval(() => {
-            blinkLaser(HERO.laserPos)
-            RaiseLaser();
-        }, HERO.laserSpeed);
-
+        HERO.laserInterval = setInterval(blinkLaser, HERO.laser.speed, HERO.laser.pos)
     }
-    //* else if (missile === OBJECTS.rocket) console.log('shooting rocket')
+    // else if (missile === OBJECTS.rocket) console.log('shooting rocket')
+    return
 }
-function RaiseLaser() {
-    var diff = Date.now() - HERO.startShootingAt
 
-    if (diff / 1000 > 1) {
-        console.log('diff:', diff)
-        HERO.startShootingAt = HERO.startShootingAt - 1000
-        HERO.laserPos.i = HERO.laserPos.i - 1
-    }
-
+function endShoot() {
+    clearInterval(HERO.laserInterval)
+    HERO.isShoot = false
+    HERO.laserInterval = null
+    renderBoard()
 }
 
 function blinkLaser(pos) {
-    console.log(`blinkLaser(${pos})`)
-    // if (!HERO.laserInterval) return
+    if (!pos.i || pos.i <= 0) {
+        console.log('(!pos.i || pos.i <= 0)');
+        endShoot()
+        return
+    }
 
-    if (HERO.laserPos.i === 0) {
-        endShoot()
-        return
-    }
-    if (gBoard[pos.i][pos.j].gameObject === OBJECTS.alien) {
-        handleAlienHit(pos)
-        endShoot()
-        return
-    }
-    updateCell(pos, OBJECTS.laser,null, `<img src="img/laser.png" />`)
-    setTimeout(() => { updateCell(pos) }, 200)
-    setTimeout(() => { updateCell(pos, OBJECTS.laser,null, `<img src="img/laser.png" />`) }, 300);
-    setTimeout(() => { updateCell(pos) }, 500)
+    else
+    console.log('HERO.laser.pos:', HERO.laser.pos) 
+
+        var prevLaserPos = {
+            i: HERO.laser.pos.i + 1,
+            j: HERO.laser.pos.j
+        }
+
+
+    console.log('gBoard[prevLaserPos.i][prevLaserPos.j].gameObject:', gBoard[prevLaserPos.i][prevLaserPos.j].gameObject)
+
+    console.log('prevLaserPos:', prevLaserPos)
+    renderCell(prevLaserPos, OBJECTS.laser)
+    setTimeout(() => { renderCell(prevLaserPos)}, HERO.laser.speed / 2)
+
+    renderCell(HERO.laser.pos, OBJECTS.laser)
+    // setTimeout(() => { renderCell(HERO.laser.pos) }, HERO.laser.speed / 2)
+
+    console.log('gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject:', gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject)
+    if (gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject === OBJECTS.alien)  handleAlienHit(pos)
+       
+    HERO.laser.pos.i = HERO.laser.pos.i + HERO.laser.movingDiff
 }
-function endShoot() {
-    clearInterval(HERO.laserInterval)
-    HERO.laserInterval = null
-    HERO.isShooting = false
-}
-///////////////////////////////////////////////////////////////////////////////////////////////
+
