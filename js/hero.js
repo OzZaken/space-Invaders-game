@@ -28,14 +28,17 @@ function getNextLocation(eventKeyboard) {
         j: HERO.pos.j,
     }
     switch (eventKeyboard.key) {
-        // case 'ArrowUp':
-        //     console.log('Moving Up↑')
-        //     break
+        case 'ArrowUp':
+            moveHero({ i: HERO.pos.i - 1, j: HERO.pos.j })
+            break
         case 'ArrowLeft':
             moveHero({ i: HERO.pos.i, j: HERO.pos.j - 1 })
             break
         case 'ArrowRight':
             moveHero({ i: HERO.pos.i, j: HERO.pos.j + 1 })
+            break
+        case 'ArrowDown':
+            moveHero({ i: HERO.pos.i + 1, j: HERO.pos.j })
             break
         case ' ':
             console.log('HERO.isShoot:', HERO.isShoot)
@@ -99,11 +102,9 @@ function blinkLaser(pos) {
     console.log('prevLaserPos:', prevLaserPos)
     console.log('gBoard[prevLaserPos.i][prevLaserPos.j].gameObject:', gBoard[prevLaserPos.i][prevLaserPos.j].gameObject)
     console.log('gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject:', gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject)
-for (let i = 0; i < 2; i++) {
-    blinkingCell(prevLaserPos)
-    blinkingCell(HERO.laser.pos)
-}
-
+    for (let i = 0; i < 2; i++) {
+        blinkingCell(prevLaserPos)
+    }
     if (gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject === OBJECTS.alien) {
         console.log('gBoard[HERO.laser.pos.i][HERO.laser.pos.j]:', gBoard[HERO.laser.pos.i][HERO.laser.pos.j])
         handleAlienHit(pos)
@@ -112,7 +113,7 @@ for (let i = 0; i < 2; i++) {
     HERO.laser.pos.i = HERO.laser.pos.i + HERO.laser.movingDiff
     return
 }
-function blinkingCell(pos) {
+function blinkingCell(pos, gameObject = OBJECTS.laser) {
     renderCell(pos, OBJECTS.laser)
-    setTimeout(renderCell, HERO.laser.speed / 2, pos) 
+    setTimeout(renderCell, HERO.laser.speed / 2, pos)
 }

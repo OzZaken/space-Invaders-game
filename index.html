@@ -13,18 +13,22 @@
 
     <h1>Space Invaders</h1>
     <hr />
-
+    <button class="start-btn" onclick="initGame()">Let`s Goo!</button>
     <div hidden class="game-container">
-        <div class="game-status">
-            <div class="score">score: <span class="score">0</span></div>
-
+        <div class="modal display-none">
+            <h2>You <span>Win!</span></h2>
+            <h3>Would you like to Play agin?</h3>
+            <button onclick="playAgin()" class="btn modal-btn">Play</button>
         </div>
+        <div class="game-status">
+            <div class="score">score: <span class="score"></span></div>
+        </div>
+
         <!-- TODO: Put in CSS -->
         <table class="game-table" border="0" cellspacing="0" cellpadding="0">
             <tbody class="board"></tbody>
         </table>
     </div>
-    <div class="info"></div>
 
     <script src="js/util.js"></script>
     <script src="js/hero.js"></script>

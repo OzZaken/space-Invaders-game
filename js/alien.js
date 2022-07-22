@@ -2,7 +2,7 @@
 
 const ALIENS = {
     aliens: null,
-    id: null,
+    nextId: null,
     speed: null, // 500
     topRowIdx: null, // 1
     bottomRowIdx: null, // 3 
@@ -12,9 +12,9 @@ const ALIENS = {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function initAliens() {
     console.log('initAliens():↓');
-    
-    ALIENS.id = 1
-    ALIENS.aliens ={}
+
+    ALIENS.nextId = 1
+    ALIENS.aliens = {}
     ALIENS.speed = 1000
     ALIENS.topRowIdx = 1
     ALIENS.bottomRowIdx = 3
@@ -28,9 +28,9 @@ function placeAliens(rowIdxStart = ALIENS.topRowIdx, rowIdxEnd = ALIENS.bottomRo
     for (var i = rowIdxStart; i <= rowIdxEnd; i++) {
         for (var j = colIdxStart; j <= colIdxEnd; j++) {
             ALIENS.aliens.push({
-                id: ALIENS.id++,
+                id: ALIENS.nextId++,
                 isHit: false,
-                currPos:{i,j}
+                currPos: { i, j }
             })
             updateCell({ i, j }, OBJECTS.alien)
         }
@@ -42,10 +42,12 @@ function handleAlienHit(pos) {
     console.log(`handleAlienHit(${pos.i},${pos.j})`);
 
     updateCell(pos, OBJECTS.explode)
-    setTimeout(updateCell,800,pos)
-    var whatAppendToU = {
-        i:pos.i + 1,
-        j:pos.j 
+    setTimeout(updateCell, 800, pos)
+    gBoard[pos.i + 1][pos.j]
+    GAME.aliensCount--
+    if (GAME.aliensCount === 0) {
+        console.log('win')
+        document.querySelector('.modal').classList.remove('display-none')
     }
     updateScore(10)
     endShoot()
@@ -73,4 +75,15 @@ function moveAliens() {
 }
 function moveAlien(pos) {
     updateCell(pos)
+}
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Not Working...yet..
+function getAliensPos() {
+    var aliensPoss = []
+    for (let i = 0; i < ALIENS.aliens.length; i++) {
+        var currAlien = ALIENS.aliens[i]
+        aliensPoss.push(currAlien.currPos)
+    }
+    console.log('aliensPoss:', aliensPoss)
+    return aliensPoss
 }

@@ -5,7 +5,7 @@
 body {
     text-align: center;
     color: #cec6c6;
-    background: linear-gradient(0.25turn, #062438, #cec6c6, #070707);
+    background: linear-gradient(0.25turn, #062438, #cec6c6, #f64);
     /* background-image: url("img/sky.gif"); */
     /* background-repeat: repeat; */
 
@@ -16,6 +16,7 @@ h1 {
     font-size: 3em;
     font-family: 'Times New Roman', Times, serif;
 }
+
 .game-container .game-status {
     font-size: 2rem;
     position: absolute;
@@ -23,7 +24,10 @@ h1 {
     left: 20px;
 }
 
-table.game-table {
+
+
+table.game-table,
+.modal {
     box-shadow: 8px 9px 16px 1px #00000052;
     border-radius: 15px;
     border: 0;
@@ -34,13 +38,35 @@ table.game-table {
     background-color: black;
 }
 
+.modal {
+    display: flex;
+    justify-content: space-evenly;
+    flex-flow: column nowrap;
+    z-index: 1;
+    height: 500px;
+    width: 500px;
+    background-color: #f64;
+}
+.btn {
+    background-color: #fff;
+}
+.modal button.modal-btn {
+    font-size: 1.5rem;
+    display: block;
+    margin: auto;
+    align-items: center;
+    align-content: center;
+    width: 100px;
+    height: 35px;
+}
+
 /* border="0" cellspacing="0" cellpadding="0"
 td.cell {
     border: 0;
 } */
 
 .cell {
-    transition: all 0.3s;
+    transition: all 0.5s;
     height: 40px;
     width: 40px;
 }
@@ -52,4 +78,8 @@ td.cell {
 
 .cell {
     background-color: black;
+}
+
+.display-none {
+    display: none;
 }

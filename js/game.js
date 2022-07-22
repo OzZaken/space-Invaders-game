@@ -2,14 +2,18 @@
 
 const OBJECTS = {
     alien: 'alien',
-    hero: 'hero',
+    alien2: 'alien2',
     empty: 'empty',
-    laser: 'laser',
-    laserGif: 'laser-2s',
-    floor: 'floor',
-    rocket: 'rocket',
     explode: 'explode',
+    floor: 'floor',
+    hero: 'hero',
+    laser: 'laser',
+    modalBye: 'modal-bye',
+    modal: 'modal',
+    moon: 'moon',
+    rocket: 'rocket',
     satelliteSpace: 'satellite-space'
+
 }
 const GAME = { // Game data 
     isOn: null, // false on init true in initGame
@@ -36,26 +40,27 @@ function init() {
     initHero()
     // init Aliens
     initAliens()
-    initGame() // later on button
+    initGame() // *later on button
 }
 function initGame() {
-    // Board
+    // Dom → (btns, board, score)
     document.querySelector('.game-container').hidden = false
+    document.querySelector('.start-btn').hidden = true
+    elScore = document.querySelector('.game-container span.score').innerText = 0
     renderBoard(gBoard)
-
-    // Aliens
+    // start btn
+    // Hero
     createHero(gBoard)
-
     // Aliens
     placeAliens()
-
     // Game
-    elScore = document.querySelector('.game-container span.score').innerText = 0
     GAME.isOn = true
+}
+function playAgin() {
+    document.querySelector('.modal').classList.add('display-none')
 
-    console.log(GAME);
-    console.log(ALIENS);
-    console.log(HERO);
+    init()
+    initGame()
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function buildBoard(ROWS = GAME.board.size, COLUMNS = GAME.board.size) {
@@ -66,13 +71,14 @@ function buildBoard(ROWS = GAME.board.size, COLUMNS = GAME.board.size) {
         for (var j = 0; j < COLUMNS; j++) {
             board[i][j] = createCell({ i, j })
         }
-
     }
+    board[0][12].gameObject = OBJECTS.moon
+    // board[0][].gameObject = OBJECTS.satelliteSpace
     board[7][1].gameObject = OBJECTS.satelliteSpace
-    board[0][12].gameObject = OBJECTS.satelliteSpace
-    board[13][11].gameObject = OBJECTS.satelliteSpace
 
-
+    for (let i = 0; i < GAME.board.size; i++) {
+        board[GAME.board.size - 1][i].gameObject = OBJECTS.floor
+    }
     return board
 }
 function renderBoard(board) {
