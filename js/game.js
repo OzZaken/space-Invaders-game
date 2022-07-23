@@ -52,12 +52,14 @@ function initGame() {
     // Hero
     createHero()
     // Aliens
-    placeAliens()
-    // Game
-    GAME.isOn = true
+    ALIENS.aliens = createAliens(ALIENS.topRowIdx, ALIENS.bottomRowIdx, ALIENS.colIdxStart, ALIENS.colIdxEnd)
+    placeAliens(ALIENS.topRowIdx, ALIENS.bottomRowIdx, ALIENS.colIdxStart, ALIENS.colIdxEnd)
     // intervals
     // GAME.satelliteSpaceInterval = setInterval(addObject, 15000, OBJECTS.satelliteSpaceInterval)
     toggleAliensInt()
+    // Game
+    GAME.isOn = true
+
 }
 function playAgin() {
     document.querySelector('.modal').classList.add('display-none')
@@ -72,7 +74,7 @@ function toggleAliensInt() {
     }
     else {
         document.querySelector('button.unit-testing').innerText = 'Pause'
-        ALIENS.movementInterval = setInterval(moveAliens, 1000, ALIENS.currDirPos)
+        ALIENS.movementInterval = setInterval(moveAliensInterval, 2000)
     }
     return
 }
@@ -102,7 +104,7 @@ function renderBoard(board = gBoard) {
         strHTML += '<tr>'
         for (var j = 0; j < board[0].length; j++) {
             var objectName = gBoard[i][j].gameObject
-            strHTML += `<td data-i="${i}" data-j="${j}" class="cell" >${getImgPath(objectName)}</td>`
+            strHTML += `<td data-i="${i}" data-j="${j}" class="cell ${i}-${j} " >${getImgPath(objectName)}</td>`
         }
         strHTML += '</tr>'
     }
@@ -111,7 +113,7 @@ function renderBoard(board = gBoard) {
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // TODO: later
-function addObject(value, gameObject) {
+function addObject(value, gameObject) { // TODO: make sure not adding on the same row with aliens
     var randCell = getRandEmptyPos()
     if (!randCell) return
     randCell.gameElement = value

@@ -70,7 +70,7 @@ function moveHero(dir) {
     updateCell(HERO.pos, OBJECTS.hero)
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-function shoot(pos, shottingType = OBJECTS.laser) {// TODO: fix shooting when playerfirst line with other object !== empty
+function shoot(pos, shottingType = OBJECTS.laser) { // TODO: fix shooting when playerfirst line with other object !== empty
     // console.log(`shoot(${shottingType} = ${OBJECTS.laser})`)
 
     HERO.isShoot = true

@@ -1,9 +1,9 @@
 'sue strict'
 
-function isValidMove(dir) {
+function isValidMove(pos) {
     if (!GAME.isOn) return false
-    else if (dir.j < 0 || dir.j > gBoard[0].length - 1) return false
-    else if (gBoard[dir.i][dir.j].gameObject !== OBJECTS.empty) return false
+    else if (pos.j < 0 || pos.j > gBoard[0].length - 1) return false
+    else if (gBoard[pos.i][pos.j].gameObject !== OBJECTS.empty) return false
     return true
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,6 +21,20 @@ function updateCell(pos, gameObject = OBJECTS.empty) {
     var elCell = getElCell(pos)
     elCell.innerHTML = getImgPath(gameObject)
 }
+function moveObjects(num,gameObject,fromPosA, toPosB) {
+    for (let i = 0; i <num; i++) {
+        moveObject(gameObject,fromPosA, toPosB)
+    }
+}
+function moveObject(gameObject,fromPosA, toPosB) {
+    // PrevCell
+    updateCell(fromPosA)
+    // NextCell
+    toPosB.pos.i += dir.i
+    toPosB.pos.j += dir.j
+    updateCell(toPosB, gameObject)
+}
+
 function renderCell(pos, gameObject = OBJECTS.empty) {
     var elCell = getElCell(pos)
     if (gameObject === OBJECTS.laser) {
@@ -66,11 +80,8 @@ function getRandEmptyPos() {
     if (emptyCells.length === 0) return -1
     return emptyCells.splice(getRandomIntInclusive(0, emptyCells.length - 1), 1)[0]
 }
-function isEmptyCell(coord) {
-    return gBoard[coord.i][coord.j].gameObject === OBJECTS.OBJECTS
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////
-function openModal(state) {
+function openModal(isWin) {
     gGame.isOn = false
     console.log('TODO: open modal with reset Game');
 }
@@ -85,20 +96,3 @@ function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-function checkGameOver() {
-    if (gPlayer.score <= 0) openModal('LOSE')
-    var targetsCover = 0
-    for (let i = 0; i < gBoard.length; i++) {
-        for (let j = 0; j < gBoard[0].length; j++) {
-            if (gBoard[i][j].isTarget && gBoard[i][j].gameElement === CARGO_ON_TARGET) targetsCover++
-        }
-        if (targetsCover === gGame.currLvlTargets) {
-            console.log('Win')
-            var nextLvl = gGame.currLvl + 1
-            openModal('WIN')
-            setTimeout(() => {
-                initGame(nextLvl)
-            }, 3000);
-        }
-    }
-}
