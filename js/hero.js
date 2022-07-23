@@ -7,8 +7,8 @@ function initHero() {
     HERO.pos = { i: 12, j: 5 }
     HERO.isShoot = false
     // init Shootings
-    HERO.laserInterval = null
     HERO.laser = {
+        laserInterval: null,
         blinkingInterval: null,
         speed: 80,
         nextLaserPos: null, //{}
@@ -23,7 +23,8 @@ function createHero() {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function getNextLocation(eventKeyboard) {
     console.log(eventKeyboard.key)
-    var nextLocation = {
+    if (!GAME.isOn) return
+    var startShootingPos = {
         i: HERO.pos.i,
         j: HERO.pos.j,
     }
@@ -43,20 +44,24 @@ function getNextLocation(eventKeyboard) {
         case ' ':
             console.log('HERO.isShoot:', HERO.isShoot)
             if (HERO.isShoot) return
-            shoot({ i: HERO.pos.i + HERO.laser.movingDiff, j: HERO.pos.j }, OBJECTS.laser)
+            if (gBoard[startShootingPos.i][startShootingPos.j].gameObject === OBJECTS.alien)
+                shoot({ i: HERO.pos.i, j: HERO.pos.j }, OBJECTS.laser)
+            else
+                shoot({ i: HERO.pos.i + HERO.laser.movingDiff, j: HERO.pos.j }, OBJECTS.laser)
             break
         case 'p':
             console.log('pause')
-            GAME.isOn = true
+            GAME.isOn = false
+            endShoot()
+            clearInterval(ALIENS.movementInterval)
             break
         default:
             return null
     }
-    return nextLocation
+    return startShootingPos
 }
 function moveHero(dir) {
-    if (dir.j < 0 || dir.j > gBoard[0].length - 1) return
-    else if (!GAME.isOn) return
+    if (!isValidMove(dir)) return
     // PrevCell
     updateCell(HERO.pos)
     // NextCell
@@ -65,43 +70,44 @@ function moveHero(dir) {
     updateCell(HERO.pos, OBJECTS.hero)
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-function shoot(pos, shottingType = OBJECTS.laser) {
+function shoot(pos, shottingType = OBJECTS.laser) {// TODO: fix shooting when playerfirst line with other object !== empty
     // console.log(`shoot(${shottingType} = ${OBJECTS.laser})`)
 
     HERO.isShoot = true
     HERO.laser.pos = { i: pos.i + HERO.laser.movingDiff, j: HERO.pos.j }
 
     // if (shottingType === OBJECTS.laser) {
-    HERO.laserInterval = setInterval(blinkLaser, HERO.laser.speed, HERO.laser.pos)
+    HERO.laser.laserInterval = setInterval(blinkLaser, HERO.laser.speed, HERO.laser.pos)
     // }
     // else if (missile === OBJECTS.rocket) console.log('shooting rocket')
     return
 }
 function endShoot() {
-    clearInterval(HERO.laserInterval)
+    clearInterval(HERO.laser.laserInterval)
+    HERO.laser.laserInterval = null
     HERO.isShoot = false
-    HERO.laserInterval = null
-    renderBoard(gBoard)
+    renderBoard() //TODO Check All cell in place
 }
 function blinkLaser(pos) {
     if (gBoard[pos.i][pos.j].gameObject === OBJECTS.alien) {
         console.log('(gBoard[pos.i][pos.j].gameObject === OBJECTS.alien) ');
         endShoot()
     }
-    if (!pos.i || pos.i <= 0) {
+    else if (!pos.i || pos.i <= 0) {
         console.log('(!pos.i || pos.i <= 0)');
         endShoot()
         return
     }
     else
-        console.log('HERO.laser.pos:', HERO.laser.pos)
+        console.log('blinkLaser(pos) → HERO.laser.pos:', HERO.laser.pos)
+    // console.log('gBoard[prevLaserPos.i][prevLaserPos.j].gameObject:', gBoard[prevLaserPos.i][prevLaserPos.j].gameObject)
+    // console.log('gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject:', gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject)
+
     var prevLaserPos = {
         i: HERO.laser.pos.i + 1,
         j: HERO.laser.pos.j
     }
-    console.log('prevLaserPos:', prevLaserPos)
-    console.log('gBoard[prevLaserPos.i][prevLaserPos.j].gameObject:', gBoard[prevLaserPos.i][prevLaserPos.j].gameObject)
-    console.log('gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject:', gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject)
+    // console.log('prevLaserPos:', prevLaserPos)
     for (let i = 0; i < 2; i++) {
         blinkingCell(prevLaserPos)
     }
@@ -116,4 +122,13 @@ function blinkLaser(pos) {
 function blinkingCell(pos, gameObject = OBJECTS.laser) {
     renderCell(pos, OBJECTS.laser)
     setTimeout(renderCell, HERO.laser.speed / 2, pos)
+}
+function blowUpNeighbors(cellI, cellJ) {
+    for (let i = cellI; i <= cellI + 1; i++) {
+        if (i < 0 || i > mat.length) continue
+        for (let j = cellJ - 1; j <= cellJ + 1; j++) {
+            if (i === cellI && j === cellJ) continue
+            if (j < 0 || j >= mat[i].length) continue
+        }
+    }
 }
