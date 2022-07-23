@@ -6,6 +6,8 @@ function initHero() {
     // init HERO
     HERO.pos = { i: 12, j: 5 }
     HERO.isShoot = false
+    HERO.laserAudio = null
+    HERO.explodeAudio = null
     // init Shootings
     HERO.laser = {
         laserInterval: null,
@@ -88,29 +90,28 @@ function endShoot() {
     HERO.isShoot = false
     renderBoard() //TODO Check All cell in place
 }
+///////////////////////////////////////////////////////////////////////////////////////////////
 function blinkLaser(pos) {
     if (gBoard[pos.i][pos.j].gameObject === OBJECTS.alien) {
         console.log('(gBoard[pos.i][pos.j].gameObject === OBJECTS.alien) ');
         endShoot()
     }
     else if (!pos.i || pos.i <= 0) {
-        console.log('(!pos.i || pos.i <= 0)');
+        console.log('(!pos.i || pos.i <= 0) valid Move Function?');
         endShoot()
         return
     }
     else
         console.log('blinkLaser(pos) → HERO.laser.pos:', HERO.laser.pos)
-    // console.log('gBoard[prevLaserPos.i][prevLaserPos.j].gameObject:', gBoard[prevLaserPos.i][prevLaserPos.j].gameObject)
-    // console.log('gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject:', gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject)
-
+        playAudio(OBJECTS.laser,HERO.laserAudio)
     var prevLaserPos = {
         i: HERO.laser.pos.i + 1,
         j: HERO.laser.pos.j
     }
-    // console.log('prevLaserPos:', prevLaserPos)
     for (let i = 0; i < 2; i++) {
         blinkingCell(prevLaserPos)
     }
+
     if (gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameObject === OBJECTS.alien) {
         console.log('gBoard[HERO.laser.pos.i][HERO.laser.pos.j]:', gBoard[HERO.laser.pos.i][HERO.laser.pos.j])
         handleAlienHit(pos)
@@ -120,9 +121,10 @@ function blinkLaser(pos) {
     return
 }
 function blinkingCell(pos, gameObject = OBJECTS.laser) {
-    renderCell(pos, OBJECTS.laser)
-    setTimeout(renderCell, HERO.laser.speed / 2, pos)
+    updateCell(pos, OBJECTS.laser)
+    setTimeout(updateCell, HERO.laser.speed / 2, pos)
 }
+///////////////////////////////////////////////////////////////////////////////////////////////
 function blowUpNeighbors(cellI, cellJ) {
     for (let i = cellI; i <= cellI + 1; i++) {
         if (i < 0 || i > mat.length) continue

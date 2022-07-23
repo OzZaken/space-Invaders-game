@@ -44,22 +44,24 @@ function init() {
     initGame() // *later on button
 }
 function initGame() {
-    // *Dom → btns, score, modal, board
+    //* Dom btns, score, modal, board
     document.querySelector('.start-btn').hidden = true
-    elScore = document.querySelector('.game-container span.score').innerText = 0
+    document.querySelector('.game-container span.score').innerText = 0
     document.querySelector('.game-container').hidden = false
     renderBoard(gBoard)
-    // Hero
-    createHero()
+    
+    //* Model → Hero, Aliens, intervals, GAME
+    createHero() 
     // Aliens
     ALIENS.aliens = createAliens(ALIENS.topRowIdx, ALIENS.bottomRowIdx, ALIENS.colIdxStart, ALIENS.colIdxEnd)
     placeAliens(ALIENS.topRowIdx, ALIENS.bottomRowIdx, ALIENS.colIdxStart, ALIENS.colIdxEnd)
-    // intervals
+    
+    // Intervals
     // GAME.satelliteSpaceInterval = setInterval(addObject, 15000, OBJECTS.satelliteSpaceInterval)
     toggleAliensInt()
+   
     // Game
     GAME.isOn = true
-
 }
 function playAgin() {
     document.querySelector('.modal').classList.add('display-none')
@@ -85,7 +87,10 @@ function buildBoard(ROWS = GAME.board.size, COLUMNS = GAME.board.size) {
     for (var i = 0; i < ROWS; i++) {
         board.push([])
         for (var j = 0; j < COLUMNS; j++) {
-            board[i][j] = createCell({ i, j })
+            board[i][j] =  {
+                pos: { i, j},
+                gameObject: OBJECTS.empty
+            }
         }
     }
     // board[0][7].gameObject = OBJECTS.earth
