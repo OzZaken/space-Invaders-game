@@ -82,7 +82,6 @@ function toggleAliensInt() {
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function buildBoard(ROWS = GAME.board.size, COLUMNS = GAME.board.size) {
-    // console.log('buildBoard()↓');
     var board = []
     for (var i = 0; i < ROWS; i++) {
         board.push([])
@@ -93,10 +92,8 @@ function buildBoard(ROWS = GAME.board.size, COLUMNS = GAME.board.size) {
             }
         }
     }
-    // board[0][7].gameObject = OBJECTS.earth
     board[0][GAME.board.size - 1].gameObject = OBJECTS.moon
     board[7][1].gameObject = OBJECTS.satelliteSpace
-
     for (let i = 0; i < GAME.board.size; i++) {
         board[GAME.board.size - 1][i].gameObject = OBJECTS.floor
     }

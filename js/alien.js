@@ -119,7 +119,7 @@ function moveAliensInterval() {
     return
 }
 function moveAliens() { //* Last
-    var diff = {i:0,j:0}
+    var diff = { i: 0, j: 0 }
     if (ALIENS.dirPos.i === 0 && ALIENS.dirPos.j === 1) {
         console.log('right');
     }

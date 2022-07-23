@@ -7,32 +7,14 @@ function isValidMove(pos) {
     return true
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-function moveObjects(fromPossA, toPossB) {
-    console.log('fromPossA:', fromPossA)
-    console.log('toPosB:', toPossB)
-
-    for (let i = 0; i < fromPossA.length; i++) {
-        console.log('fromPossA[i]:', fromPossA[i])
-        updateCell(OBJECTS.alien, fromPossA[i])
-
-        updateCell(toPossB[i])
+function createCell(pos, gameObject = OBJECTS.empty) {
+    return {
+        pos: { i: pos.i, j: pos.j },
+        gameObject: gameObject
     }
-
 }
-function moveObject(gameObject, fromPosA, toPosB) {
-    // PrevCell
-
-    updateCell(fromPosA)
-    // NextCell
-    updateCell(toPosB, gameObject)
-}
-///////////////////////////////////////////////////////////////////////////////////////////////
 function renderCell(pos, gameObject = OBJECTS.empty) {
     var elCell = getElCell(pos)
-    if (gameObject === OBJECTS.laser) {
-        elCell.innerHTML = getImgPath(OBJECTS.laser)
-        return
-    }
     elCell.innerHTML = getImgPath(gameObject)
     return
 }
@@ -68,17 +50,12 @@ function getImgPath(elementName) {
     }
     return imgPath
 }
-function getRandEmptyPos() { // TODO.. 
-    var emptyCells = []
-    for (var i = 0; i < gBoard.length; i++) {
-        for (var j = 0; j < gBoard[i].length; j++) {
-            if (gBoard[i][j].gameObject === OBJECTS.empty) {
-                emptyCells.push({ i, j })
-            }
+function cleanAliensArea() {
+    for (var i = rowIdxStart; i <= rowIdxEnd; i++) {
+        for (var j = colIdxStart; j <= colIdxEnd; j++) {
+            gBoard[i][j] = updateCell()
         }
     }
-    if (emptyCells.length === 0) return -1
-    return emptyCells.splice(getRandomIntInclusive(0, emptyCells.length - 1), 1)[0]
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function openModal(isWin) {// TODO.. 
@@ -94,4 +71,34 @@ function playAudio(AudioName, audioEco) {// TODO..
 }
 function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
+}
+function getRandEmptyPos() { // TODO.. 
+    var emptyCells = []
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[i].length; j++) {
+            if (gBoard[i][j].gameObject === OBJECTS.empty) {
+                emptyCells.push({ i, j })
+            }
+        }
+    }
+    if (emptyCells.length === 0) return -1
+    return emptyCells.splice(getRandomIntInclusive(0, emptyCells.length - 1), 1)[0]
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function moveObjects(fromPossA, toPossB) {
+    cleanAliensArea()
+    for (let i = 0; i < fromPossA.length; i++) {
+        console.log('fromPossA[i]:', fromPossA[i])
+        updateCell(OBJECTS.alien, fromPossA[i])
+
+        updateCell(toPossB[i])
+    }
+    return
+}
+function moveObject(gameObject, fromPosA, toPosB) {
+    // PrevCell
+
+    updateCell(fromPosA)
+    // NextCell
+    updateCell(toPosB, gameObject)
 }
