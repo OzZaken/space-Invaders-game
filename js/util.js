@@ -19,7 +19,7 @@ function renderCell(pos, gameObject = OBJECTS.empty) {
     return
 }
 function updateCell(pos, gameObject = OBJECTS.empty) {
-    // console.log(`updateCell(${pos.i},${pos.j},${gameObject})`)
+    console.log(`updateCell(${pos.i},${pos.j},${gameObject})`)
     // Model
     gBoard[pos.i][pos.j].gameObject = gameObject
     //  Dom
@@ -50,27 +50,20 @@ function getImgPath(elementName) {
     }
     return imgPath
 }
-function cleanAliensArea() {
-    for (var i = rowIdxStart; i <= rowIdxEnd; i++) {
-        for (var j = colIdxStart; j <= colIdxEnd; j++) {
-            gBoard[i][j] = updateCell()
-        }
-    }
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////
-function openModal(isWin) {// TODO.. 
-    gGame.isOn = false
-    console.log('TODO: open modal with reset Game');
+function getRandomIntInclusive(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min
 }
-function playAudio(AudioName, audioEco) {// TODO.. 
+function playAudio(AudioName, audioEco) {
     if (audioEco) {
         audioEco.pause()
         return
     }
     new Audio(`audio/${AudioName}.mp3`).play()
 }
-function getRandomIntInclusive(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min
+function openModal(isWin) { // TODO.. 
+    gGame.isOn = false
+    console.log('TODO: open modal with reset Game');
 }
 function getRandEmptyPos() { // TODO.. 
     var emptyCells = []
@@ -85,17 +78,14 @@ function getRandEmptyPos() { // TODO..
     return emptyCells.splice(getRandomIntInclusive(0, emptyCells.length - 1), 1)[0]
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function moveObjects(fromPossA, toPossB) {
-    cleanAliensArea()
+function moveObjects(fromPossA, toPossB) { // TODO
     for (let i = 0; i < fromPossA.length; i++) {
-        console.log('fromPossA[i]:', fromPossA[i])
-        updateCell(OBJECTS.alien, fromPossA[i])
 
-        updateCell(toPossB[i])
+
     }
     return
 }
-function moveObject(gameObject, fromPosA, toPosB) {
+function moveObject(gameObject, fromPosA, toPosB) { // TODO.
     // PrevCell
 
     updateCell(fromPosA)

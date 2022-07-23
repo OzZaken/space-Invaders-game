@@ -76,7 +76,7 @@ function toggleAliensInt() {
     }
     else {
         document.querySelector('button.unit-testing').innerText = 'Pause'
-        ALIENS.movementInterval = setInterval(moveAliensInterval, 2000)
+        ALIENS.movementInterval = setInterval(moveAliens, 2000)
     }
     return
 }
@@ -114,17 +114,16 @@ function renderBoard(board = gBoard) {
     return
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// TODO: later
-function addObject(value, gameObject) { // TODO: make sure not adding on the same row with aliens
-    var randCell = getRandEmptyPos()
-    if (!randCell) return
-    randCell.gameElement = value
-    updateCell(randCell.pos, getImgPath(gameObject))
-    setTimeout(() => {
-        removeObject(randCell, value)
-    }, 4000)
-}
-function removeObject(cell, value) {
-    if (cell.gameElement !== value) return
-
-}
+// // TODO: later
+// function addObject(value, gameObject) { // TODO: make sure not adding on the same row with aliens
+//     var randCell = getRandEmptyPos()
+//     if (!randCell) return
+//     randCell.gameElement = value
+//     updateCell(randCell.pos, getImgPath(gameObject))
+//     setTimeout(() => {
+//         removeObject(randCell, value)
+//     }, 4000)
+// }
+// function removeObject(cell, value) {
+//     if (cell.gameElement !== value) return
+// }
