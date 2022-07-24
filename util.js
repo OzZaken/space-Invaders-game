@@ -1,77 +1,94 @@
 'sue strict'
+
+function isValidMove(pos) {
+    if (!GAME.isOn) return false
+    else if (pos.j < 0 || pos.j > gBoard[0].length - 1) return false
+    else if (gBoard[pos.i][pos.j].gameObject !== OBJECTS.empty) return false
+    return true
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function createCell(pos, gameObject = OBJECTS.empty) {
     return {
-        pos: pos,
-        gameObject: gameObject,
+        pos: { i: pos.i, j: pos.j },
+        gameObject: gameObject
     }
 }
+function renderCell(pos, gameObject = OBJECTS.empty) {
+    var elCell = getElCell(pos)
+    elCell.innerHTML = getImgPath(gameObject)
+    return
+}
 function updateCell(pos, gameObject = OBJECTS.empty) {
-    // console.log(`updateCell(${pos.i}|${pos.j},${gameObject})`)
+    console.log(`updateCell(${pos.i},${pos.j},${gameObject})`)
     // Model
     gBoard[pos.i][pos.j].gameObject = gameObject
     //  Dom
     var elCell = getElCell(pos)
-    if (gameObject === OBJECTS.laser) {
-        elCell.innerHTML = getImgPath(gBoard[pos.i][pos.j].gameObject)
-        return
-    }
-    elCell.innerHTML = getGifPath(gBoard[pos.i][pos.j].gameObject)
-    return
+    elCell.innerHTML = getImgPath(gameObject)
 }
-function renderCell(pos, gameObject = OBJECTS.empty) {
-    var elCell = getElCell(pos)
-
-    if (gameObject === OBJECTS.laser) {
-        elCell.innerHTML = getImgPath(OBJECTS.laser)
-        return
-    }
-    elCell.innerHTML = getGifPath(gameObject)
-    return
+function renderScore(diff) {
+    GAME.score += diff
+    document.querySelector('.game-container span.score').innerText = GAME.score
 }
+///////////////////////////////////////////////////////////////////////////////////////////////
 function getElCell(pos) {
     // console.log(`getElCell(${pos.i},${pos.j})↓`)
     return document.querySelector(`[data-i='${pos.i}'][data-j='${pos.j}']`)
 }
-function getGifPath(elementName) {
-    // console.log(`getGifPath(${elementName})`);
-    return `<img src="img/${elementName}.gif" />`
-}
 function getImgPath(elementName) {
-    // console.log(`getImgPath(${elementName}) `);
-    return `<img src="img/${elementName}.png" />`
-}
-function isEmptyCell(coord) {
-    return gBoard[coord.i][coord.j].gameObject === OBJECTS.OBJECTS
-}
-function isAlien(coord) {
-    return gBoard[coord.i][coord.j].gameObject === OBJECTS.alien
+    var imgPath = ''
+    switch (elementName) {
+        case OBJECTS.laser:
+            imgPath = `<img src="img/${elementName}.png" />`
+            break;
+        case OBJECTS.empty:
+            imgPath = ''
+            break;
+        default:
+            imgPath = `<img src="img/${elementName}.gif" />`
+            break;
+    }
+    return imgPath
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-function isMovingByOneCell(iAbsDiff, jAbsDiff) {
-    if ((iAbsDiff + jAbsDiff === 1) ||
-        (jAbsDiff + iAbsDiff === 1) ||
-        (iAbsDiff === gBoard.length - 1) ||
-        (jAbsDiff === gBoard[0].length - 1)) return true
-    return false
+function getRandomIntInclusive(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min
 }
-function playAudio(AudioName) {
-    if (gAudio) {
-        gAudio.pause()
+function playAudio(AudioName, audioEco) {
+    if (audioEco) {
+        audioEco.pause()
         return
     }
     new Audio(`audio/${AudioName}.mp3`).play()
 }
-function blowUpNeighbors(cellI, cellJ) {
-    for (let i = cellI; i <= cellI + 1; i++) {
-        if (i < 0 || i > mat.length) continue
-        for (let j = cellJ - 1; j <= cellJ + 1; j++) {
-            if (i === cellI && j === cellJ) continue
-            if (j < 0 || j >= mat[i].length) continue
+function openModal(isWin) { // TODO.. 
+    gGame.isOn = false
+    console.log('TODO: open modal with reset Game');
+}
+function getRandEmptyPos() { // TODO.. 
+    var emptyCells = []
+    for (var i = 0; i < gBoard.length; i++) {
+        for (var j = 0; j < gBoard[i].length; j++) {
+            if (gBoard[i][j].gameObject === OBJECTS.empty) {
+                emptyCells.push({ i, j })
+            }
         }
     }
+    if (emptyCells.length === 0) return -1
+    return emptyCells.splice(getRandomIntInclusive(0, emptyCells.length - 1), 1)[0]
 }
-function updateScore(diff) {
-    gGame.score += diff
-    document.querySelector('.game-container span.game-status ').innerText = gGame.score
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function moveObjects(fromPossA, toPossB) { // TODO
+    for (let i = 0; i < fromPossA.length; i++) {
+
+
+    }
+    return
+}
+function moveObject(gameObject, fromPosA, toPosB) { // TODO.
+    // PrevCell
+
+    updateCell(fromPosA)
+    // NextCell
+    updateCell(toPosB, gameObject)
 }

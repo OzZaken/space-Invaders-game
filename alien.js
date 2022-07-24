@@ -2,13 +2,12 @@
 
 const ALIENS = {
     movementInterval: null,
-    dirPos: null, //{1,0}left.. {0,1}right..{1 ,1}downRight..
-    aliens: null,//[{}{pos,isHit}]
+    dirPos: null, //{1,0}left.. {0,1}right.. {1 ,1}down.
+    aliens: null,
     idx: null,
-    movementSpeed: null, // 500
-    topRowIdx: null, // 1
-    bottomRowIdx: null, // 3 
-    isFreeze: null, // 
+    movementSpeed: null,
+    topRowIdx: null,
+    bottomRowIdx: null,
 }
 function initAliens() {
     console.log('initAliens():↓')
@@ -41,7 +40,12 @@ function createAliens(rowIdxStart, rowIdxEnd, colIdxStart, colIdxEnd) {
     return newAliens
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-function placeAliens(rowIdxStart, rowIdxEnd, colIdxStart, colIdxEnd) {
+function placeAliens(
+    rowIdxStart = ALIENS.rowIdxStart,
+    rowIdxEnd = ALIENS.rowIdxEnd,
+    colIdxStart = ALIENS.colIdxStart,
+    colIdxEnd = ALIENS.colIdxEnd
+) {
     console.log(`placeAliensOnBoard(${rowIdxStart}, ${rowIdxEnd}, ${colIdxStart}, ${colIdxEnd})`);
     var alienIdx = 0
     for (var i = rowIdxStart; i <= rowIdxEnd; i++) {
@@ -77,64 +81,6 @@ function handleAlienHit(pos) {
     return
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// last 
-function moveAliensInterval() {
-    console.log(`moveAliensInterval(${ALIENS.dirPos.i},${ALIENS.dirPos.j})`)
-
-    var liveAliensPoss = getLiveAliensPoss()// Get only those alive
-    var relevantAliens = getAliensEdges(liveAliensPoss)// Get only the relevant for the checking
-    // var currAliensPoss = [] // possA
-    // var nextAliensPoss = [] // possB
-
-    console.log('liveAliensPoss:', liveAliensPoss)
-    console.log('relevantAliens', relevantAliens);
-
-    for (let i = 0; i < relevantAliens.length; i++) {
-        var currAlienPoss = relevantAliens[i]
-        var hisNextPos = { i: currAlienPoss.i + ALIENS.dirPos.i, j: currAlienPoss.j + ALIENS.dirPos.j }
-        var hisNextCell = gBoard[currAlienPoss.i + ALIENS.dirPos.i][currAlienPoss.j + ALIENS.dirPos.j]
-
-        console.log('currAlienPoss:', currAlienPoss)
-        console.log('hisNextPos:', hisNextPos)
-        console.log('Valid Move:', hisNextCell.gameObject === OBJECTS.empty);
-        // Saved If All valid Move
-        // currAliensPoss.push(currAlienPoss)//* posA[i]
-        //*                                   ↨
-        // nextAliensPoss.push(hisNextPos)//*   posB[i]
-        if (!isValidMove({ i: hisNextCell.pos.i, j: hisNextCell.pos.j })) {
-            console.log('nextCell : ', { i: hisNextCell.pos.i, j: hisNextCell.pos.j });
-            console.log(gBoard[currAlienPoss.i][currAlienPoss.j]);
-            console.log('cant move!');
-            changeAlienDir()
-            return //TODO: no valid Move → Change ALIENS.dirPos  
-        }
-    }
-    console.log(`\tThey can Move!\nMoving Every life aliens(${liveAliensPoss.length})`);
-    placeAliens()
-
-    ALIENS.topRowIdx += ALIENS.dirPos.i
-    ALIENS.bottomRowIdx += ALIENS.dirPos.i
-    ALIENS.colIdxStart += ALIENS.dirPos.j
-    ALIENS.colIdxEnd += ALIENS.dirPos.j
-    
-    
-    // moveAliens(liveAliensPoss) //TODO: place instead!!!
-    return
-}
-function moveAliens(liveAliens) {
-    
-    // var alienPoss = []// posA
-    // var nextAliensPoss = []// posB
-    // for (let i = 0; i < liveAliens.length; i++) {
-    //     var currAlienPoss = liveAliens[i]
-    //     var hisNextPos = { i: currAlienPoss.i + ALIENS.dirPos.i, j: currAlienPoss.j + ALIENS.dirPos.j }
-    //     alienPoss.push(currAlienPoss)
-    //     nextAliensPoss.push(hisNextPos)
-    // }
-    // moveObjects(alienPoss, nextAliensPoss)
-    return
-}
-///////////////////////////////////////////////////////////////////////////////////////////////
 function getLiveAliensPoss() {
     var liveAliensPoss = []
     for (let i = 0; i < ALIENS.aliens.length; i++) {
@@ -163,20 +109,91 @@ function getAliensEdges(liveAliens) {
         return relevantAliensPoss
     }
     //TODO:
-    // else if (ALIENS.dirPos.i === -1 && ALIENS.dirPos.j === -1) {// * ↑ Up
-    //     console.log(' Dir ↑ Up');
-    // }
     // else if (ALIENS.dirPos.i === 1 && ALIENS.dirPos.j === 1) {// * ↓ Down
     //     console.log(' Dir ↑ Up');
     // }
     // else if (ALIENS.dirPos.i === 1 && ALIENS.dirPos.j === 1) {// * //* ← Left 
     //     console.log(' Dir ↑ Up');
     // }
+    // else if (ALIENS.dirPos.i === -1 && ALIENS.dirPos.j === -1) {// * ↑ Up
+    //     console.log(' Dir ↑ Up');
+    // }
     return relevantAliensPoss
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-function changeAlienDir() { //* Last
-    if (ALIENS.dirPos.i === 0 && ALIENS.dirPos.j === 1) {
-        console.log('right');
+// last 
+function moveAliens() {
+    if (ALIENS.dirPos.i === 1 && ALIENS.dirPos.j === 1) changeAliensDir()
+    console.log(`moveAliensInterval(${ALIENS.dirPos.i},${ALIENS.dirPos.j})`)
+
+    var liveAliensPoss = getLiveAliensPoss()
+    var relevantAliens = getAliensEdges(liveAliensPoss) // Get only the relevant for the checking
+    var currAliensPoss = [] //! possA
+    var nextAliensPoss = [] //! possB
+
+    console.log('liveAliensPoss:', liveAliensPoss)
+    console.log('relevantAliens', relevantAliens);
+
+    for (let i = 0; i < relevantAliens.length; i++) {
+        var currAlienPoss = relevantAliens[i]
+        var hisNextPos = { i: currAlienPoss.i + ALIENS.dirPos.i, j: currAlienPoss.j + ALIENS.dirPos.j }
+        var hisNextCell = gBoard[currAlienPoss.i + ALIENS.dirPos.i][currAlienPoss.j + ALIENS.dirPos.j]
+
+        console.log('currAlienPoss:', currAlienPoss)
+        console.log('hisNextPos:', hisNextPos)
+        // console.log('Valid Move:', hisNextCell.gameObject === OBJECTS.empty);
+        //! Saved If All valid Move
+        currAliensPoss.push(currAlienPoss)//! posA[i]
+        //!                                       ↨
+        nextAliensPoss.push(hisNextPos)//!   posB[i]
+        if (!isValidMove({ i: hisNextCell.pos.i, j: hisNextCell.pos.j })) {
+            console.log('nextCell : ', { i: hisNextCell.pos.i, j: hisNextCell.pos.j });
+            console.log(gBoard[currAlienPoss.i][currAlienPoss.j]);
+            console.log('\tcant move! Change ALIENS.dirPos ');
+            changeAliensDir()
+            return
+        }
     }
+    console.log(`\tThey can Move!\nMoving Every life aliens(${liveAliensPoss.length})`)
+    cleanBoard(
+        ALIENS.topRowIdx,
+        ALIENS.bottomRowIdx,
+        ALIENS.colIdxStart,
+        ALIENS.colIdxEnd
+    )
+    //! Change model
+    for (let i = 0; i < ALIENS.aliens.length; i++) {
+        var currAlien = ALIENS.aliens[i]
+        ALIENS.aliens[i].currPos.i += ALIENS.dirPos.i
+        ALIENS.aliens[i].currPos.j += ALIENS.dirPos.j
+    }
+    placeAliens(
+        ALIENS.topRowIdx + ALIENS.dirPos.i,
+        ALIENS.bottomRowIdx + ALIENS.dirPos.i,
+        ALIENS.colIdxStart + ALIENS.dirPos.j,
+        ALIENS.colIdxEnd + ALIENS.dirPos.j)
+    return
+}
+function changeAliensDir() { //* Last
+    if (ALIENS.dirPos.i === 0 && 1 === ALIENS.dirPos.j || // → Right
+        ALIENS.dirPos.i === -1 && 0 === ALIENS.dirPos.j) { // ← Left
+        ALIENS.dirPos = { i: 1, j: 1 } // ↓ Down
+    }
+    else if (ALIENS.dirPos.i === 1 && 1 === ALIENS.dirPos.j) { // ↓ Down
+        var aliensEdges = getAliensEdges(getLiveAliensPoss())[0]
+        if (aliensEdges.j === gBoard[0].length - 1) ALIENS.dirPos = { i: 1, j: 1 } // ← Left
+        elseALIENS.dirPos = { i: 1, j: 1 } // → Right
+    }
+    // if (ALIENS.dirPos.i === -1 && -1 === ALIENS.dirPos.j) { // Up }
+    return
+}
+function cleanBoard(rowIdxStart, rowIdxEnd, colIdxStart, colIdxEnd) {
+    console.log(`cleanBoard(${rowIdxStart}, ${rowIdxEnd}, ${colIdxStart}, ${colIdxEnd})`);
+    for (var i = rowIdxStart; i <= rowIdxEnd; i++) {
+        for (var j = colIdxStart; j <= colIdxEnd; j++) {
+            gBoard[i][j] = createCell({ i, j })
+        }
+    }
+    renderBoard()
+    return
 }
