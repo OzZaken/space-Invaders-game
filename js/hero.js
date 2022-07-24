@@ -53,9 +53,8 @@ function getNextLocation(eventKeyboard) {
             break
         case 'p':
             console.log('pause')
-            GAME.isOn = false
+            toggleAliensInt()
             endShoot()
-            clearInterval(ALIENS.movementInterval)
             break
         default:
             return null
