@@ -1,6 +1,7 @@
 'sue strict'
 
 function isValidMove(pos) {
+    console.log(pos);
     if (!GAME.isOn) return false
     else if (pos.j < 0 || pos.j > gBoard[0].length - 1) return false
     else if (gBoard[pos.i][pos.j].gameObject !== OBJECTS.empty) return false
@@ -61,10 +62,7 @@ function playAudio(AudioName, audioEco) {
     }
     new Audio(`audio/${AudioName}.mp3`).play()
 }
-function openModal(isWin) { // TODO.. 
-    gGame.isOn = false
-    console.log('TODO: open modal with reset Game');
-}
+
 function getRandEmptyPos() { // TODO.. 
     var emptyCells = []
     for (var i = 0; i < gBoard.length; i++) {
@@ -76,6 +74,9 @@ function getRandEmptyPos() { // TODO..
     }
     if (emptyCells.length === 0) return -1
     return emptyCells.splice(getRandomIntInclusive(0, emptyCells.length - 1), 1)[0]
+}
+function openModal(isWin) { // TODO.. 
+    console.log('TODO: open modal with reset Game');
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function moveObjects(fromPossA, toPossB) { // TODO

@@ -58,7 +58,7 @@ function initGame() {
     
     // Intervals
     // GAME.satelliteSpaceInterval = setInterval(addObject, 15000, OBJECTS.satelliteSpaceInterval)
-    toggleAliensInt()
+    // toggleAliensInt()
    
     // Game
     GAME.isOn = true

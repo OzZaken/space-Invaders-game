@@ -24,15 +24,13 @@ h1 {
     left: 20px;
 }
 
-
-
 table.game-table,
 .modal {
     box-shadow: 8px 9px 16px 1px #00000052;
     border-radius: 15px;
     border: 0;
 
-    /* margin: auto; */
+    margin: auto;
 
     /* position: fixed;
     top: 50%;
@@ -67,13 +65,10 @@ td .cell {
     border: 0;
 }
 
-
-
 .cell img {
     max-height: 40px;
     max-width: 40px;
 }
-
 
 .cell {
     background-image: url('/img/space.gif');

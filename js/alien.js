@@ -127,32 +127,29 @@ function moveAliens() {
     console.log(`moveAliensInterval(${ALIENS.dirPos.i},${ALIENS.dirPos.j})`)
 
     var liveAliensPoss = getLiveAliensPoss()
-    var relevantAliens = getAliensEdges(liveAliensPoss) // Get only the relevant for the checking
-    var currAliensPoss = [] //! possA
-    var nextAliensPoss = [] //! possB
+    var relevantAliensPos = getAliensEdges(liveAliensPoss) // Get only the relevant for the checking
+    var currAliensPoss = []
+    var nextAliensPoss = []
 
     console.log('liveAliensPoss:', liveAliensPoss)
-    console.log('relevantAliens', relevantAliens);
+    console.log('relevantAliens', relevantAliensPos);
 
-    for (let i = 0; i < relevantAliens.length; i++) {
-        var currAlienPoss = relevantAliens[i]
+    for (let i = 0; i < relevantAliensPos.length; i++) {
+        var currAlienPoss = relevantAliensPos[i]
         var hisNextPos = { i: currAlienPoss.i + ALIENS.dirPos.i, j: currAlienPoss.j + ALIENS.dirPos.j }
         var hisNextCell = gBoard[currAlienPoss.i + ALIENS.dirPos.i][currAlienPoss.j + ALIENS.dirPos.j]
 
-        console.log('currAlienPoss:', currAlienPoss)
-        console.log('hisNextPos:', hisNextPos)
+        console.log(`currAlienPoss,${currAlienPoss},hisNextPos${hisNextPos}`)
         // console.log('Valid Move:', hisNextCell.gameObject === OBJECTS.empty);
         //! Saved If All valid Move
         currAliensPoss.push(currAlienPoss)//! posA[i]
         //!                                       ↨
         nextAliensPoss.push(hisNextPos)//!   posB[i]
-        if (!isValidMove({ i: hisNextCell.pos.i, j: hisNextCell.pos.j })) {
-            console.log('nextCell : ', { i: hisNextCell.pos.i, j: hisNextCell.pos.j });
-            console.log(gBoard[currAlienPoss.i][currAlienPoss.j]);
-            console.log('\tcant move! Change ALIENS.dirPos ');
-            changeAliensDir()
-            return
-        }
+    }
+
+    for (let i = 0; i < hisNextPos.length; i++) {
+        const element = array[i];
+        
     }
     console.log(`\tThey can Move!\nMoving Every life aliens(${liveAliensPoss.length})`)
     cleanBoard(
