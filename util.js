@@ -6,6 +6,7 @@ function isValidMove(pos) {
     else if (gBoard[pos.i][pos.j].gameObject !== OBJECTS.empty) return false
     return true
 }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 function createCell(pos, gameObject = OBJECTS.empty) {
     return {

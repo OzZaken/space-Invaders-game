@@ -2,82 +2,91 @@
     box-sizing: border-box;
 }
 
+:root {
+    --clr-main: 'red';
+}
+
+html {
+    font-family: 'lato';
+}
+
 body {
     text-align: center;
-    color: #cec6c6;
-    background: linear-gradient(0.25turn, #062438, #cec6c6, #f64);
-    /* background-image: url("img/sky.gif"); */
-    /* background-repeat: repeat; */
+    background: black;
+    height: 100vh;
+    overflow-y: hidden;
+}
 
+#bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
 }
 
 h1 {
+    z-index: 111;
     color: #062438;
     font-size: 3em;
     font-family: 'Times New Roman', Times, serif;
 }
 
-.game-container .game-status {
-    font-size: 2rem;
-    position: absolute;
-    top: 20%;
-    left: 20px;
-}
+/* .game-container .game-status { */
+/* font-size: 2rem; */
+/* position: absolute; */
+/* top: 20%; */
+/* left: 20px; */
+/* } */
 
-table.game-table,
-.modal {
-    box-shadow: 8px 9px 16px 1px #00000052;
-    border-radius: 15px;
-    border: 0;
+/* table.game-table, */
+/* .modal { */
+/* box-shadow: 8px 9px 16px 1px #00000052; */
+/* border-radius: 15px; */
+/* border: 0; */
+/* margin: auto; */
+/* background-color: black; */
+/* } */
 
-    margin: auto;
+/* .modal { */
+/* display: flex; */
+/* justify-content: space-evenly; */
+/* flex-flow: column nowrap; */
+/* z-index: 1; */
+/* height: 500px; */
+/* width: 500px; */
+/* background-color: #f64; */
+/* } */
 
-    /* position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); */
-
-    background-color: black;
-}
-
-.modal {
-    display: flex;
-    justify-content: space-evenly;
-    flex-flow: column nowrap;
-    z-index: 1;
-    height: 500px;
-    width: 500px;
-    background-color: #f64;
-}
-
-.modal button.modal-btn {
-    font-size: 1.5rem;
-    display: block;
-    margin: auto;
-    align-items: center;
-    align-content: center;
-    width: 100px;
-    height: 35px;
-}
+/* .modal button.modal-btn { */
+/* font-size: 1.5rem; */
+/* display: block; */
+/* margin: auto; */
+/* align-items: center; */
+/* align-content: center; */
+/* width: 100px; */
+/* height: 35px; */
+/* } */
 
 
-td .cell {
-    border: 0;
-}
+/* td .cell { */
+/* border: 0; */
+/* } */
 
 .cell img {
+    border:1px solid blueviolet;
     max-height: 40px;
     max-width: 40px;
 }
 
 .cell {
-    background-image: url('/img/space.gif');
     background-repeat: repeat;
-
     transition: all 0.5s;
     height: 40px;
     width: 40px;
 }
+
 .display-none {
     display: none;
 }
