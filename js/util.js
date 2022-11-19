@@ -1,4 +1,4 @@
-'sue strict'
+'use strict'
 
 function isValidMove(pos) {
     console.log(pos);
@@ -7,35 +7,34 @@ function isValidMove(pos) {
     else if (gBoard[pos.i][pos.j].gameObject !== OBJECTS.empty) return false
     return true
 }
-///////////////////////////////////////////////////////////////////////////////////////////////
-function createCell(pos, gameObject = OBJECTS.empty) {
-    return {
-        pos: { i: pos.i, j: pos.j },
-        gameObject: gameObject
-    }
-}
-function renderCell(pos, gameObject = OBJECTS.empty) {
+
+function renderCell(pos) {
+    const { i, j } = pos
+    const { board } = GAME
     var elCell = getElCell(pos)
-    elCell.innerHTML = getImgPath(gameObject)
+    elCell.innerText = board[i][j].gameEl
     return
 }
-function updateCell(pos, gameObject = OBJECTS.empty) {
-    console.log(`updateCell(${pos.i},${pos.j},${gameObject})`)
-    // Model
-    gBoard[pos.i][pos.j].gameObject = gameObject
-    //  Dom
-    var elCell = getElCell(pos)
-    elCell.innerHTML = getImgPath(gameObject)
+
+function updateCell(pos, gameEl = '') {
+    const { i, j } = pos
+    const { board } = GAME
+    board[i][j].gameEl = gameEl
+    renderCell(pos)
 }
+
 function renderScore(diff) {
     GAME.score += diff
     document.querySelector('.game-container span.score').innerText = GAME.score
 }
-///////////////////////////////////////////////////////////////////////////////////////////////
+
 function getElCell(pos) {
-    // console.log(`getElCell(${pos.i},${pos.j})↓`)
-    return document.querySelector(`[data-i='${pos.i}'][data-j='${pos.j}']`)
+    const { i, j } = pos
+    const { elCells } = GAME.domEls
+    const elCell = elCells.find((elCell) => elCell.dataset.i === i && elCell.dataset.j === j)
+    return elCell
 }
+
 function getImgPath(elementName) {
     var imgPath = ''
     switch (elementName) {
@@ -51,10 +50,11 @@ function getImgPath(elementName) {
     }
     return imgPath
 }
-///////////////////////////////////////////////////////////////////////////////////////////////
+
 function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
+
 function playAudio(AudioName, audioEco) {
     if (audioEco) {
         audioEco.pause()
@@ -75,10 +75,11 @@ function getRandEmptyPos() { // TODO..
     if (emptyCells.length === 0) return -1
     return emptyCells.splice(getRandomIntInclusive(0, emptyCells.length - 1), 1)[0]
 }
+
 function openModal(isWin) { // TODO.. 
     console.log('TODO: open modal with reset Game');
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function moveObjects(fromPossA, toPossB) { // TODO
     for (let i = 0; i < fromPossA.length; i++) {
 
@@ -86,6 +87,7 @@ function moveObjects(fromPossA, toPossB) { // TODO
     }
     return
 }
+
 function moveObject(gameObject, fromPosA, toPosB) { // TODO.
     // PrevCell
 

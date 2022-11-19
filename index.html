@@ -5,32 +5,23 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Invaders-O.Z</title>
+    <title>Space Invaders</title>
     <link rel="stylesheet" href="css/main.css">
 </head>
 
-<body onload="init()" onkeydown="getNextLocation(event)">
+<body onload="initGame()" onkeydown="getNextLocation(event)">
+    <h1 class="heading">Space Invaders</h1>
+    <section class="space-invaders">
+        <div class="game-board">
+            <table>
+                <tbody class="board"></tbody>
+            </table>
+        </div>
+    </section>
+    
+    
+    <!-- Note: Keep last child Css -->
     <div id="bg"></div>
-
-    <h1>Space Invaders</h1>
-    <hr />
-    <button class="start-btn" onclick="initGame()">Let`s Goo!</button>
-    <div hidden class="game-container">
-        <div class="modal display-none">
-            <h2>You <span>Win!</span></h2>
-            <h3>Would you like to Play agin?</h3>
-            <button onclick="playAgin()" class="btn modal-btn">Play</button>
-        </div>
-        <div class="game-status">
-            <div class="score">score: <span class="score"></span></div>
-            <button class="unit-testing" onclick="toggleAliensInt()">Pause</button>
-        </div>
-
-        <!-- TODO: Put in CSS -->
-        <table class="game-table" cellspacing="0" cellpadding="0">
-            <tbody class="board"></tbody>
-        </table>
-    </div>
 
     <script src="assets//lib/particles.min.js"></script>
     <script src="js/util.js"></script>

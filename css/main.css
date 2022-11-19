@@ -2,20 +2,17 @@
     box-sizing: border-box;
 }
 
-:root {
-    --clr-main: 'red';
-}
-
 html {
     font-family: 'lato';
 }
 
 body {
-    text-align: center;
+    /* text-align: center; */
     background: black;
+    user-select: none;
     height: 100vh;
-    overflow-y: hidden;
 }
+
 
 #bg {
     position: absolute;
@@ -26,11 +23,42 @@ body {
     z-index: -1;
 }
 
+
+/* Heading */
 h1 {
-    z-index: 111;
-    color: #062438;
+    animation: fadeOutUp 3.4s;
+    color: whitesmoke;
     font-size: 3em;
     font-family: 'Times New Roman', Times, serif;
+}
+
+@keyframes fadeOutUp {
+    from {
+        opacity: 1;
+        margin-top: 1000px;
+    }
+
+    to {
+        opacity: 0;
+        margin-top: -10px;
+        transform: translate3d(0, -10px, 0);
+    }
+}
+
+.fadeOutUp {
+    animation-name: fadeOutUp;
+}
+
+/* Board */
+.game-board {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+table {
+    margin: auto;
 }
 
 /* .game-container .game-status { */
@@ -75,16 +103,16 @@ h1 {
 /* } */
 
 .cell img {
-    border:1px solid blueviolet;
+    border: 1px solid blueviolet;
     max-height: 40px;
     max-width: 40px;
 }
 
 .cell {
-    background-repeat: repeat;
     transition: all 0.5s;
     height: 40px;
     width: 40px;
+    min-width: 40px;
 }
 
 .display-none {
