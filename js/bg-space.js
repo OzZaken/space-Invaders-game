@@ -1,6 +1,6 @@
 /* ---- particles.js config ---- */
 
-particlesJS("bg", {
+particlesJS("bg-space", {
     "particles": {
       "number": {
         "value": 90,

@@ -1,16 +1,34 @@
 'use strict'
-
+// var scroller = setInterval(function() {  
+//     window.scrollTo(0,document.body.scrollHeight);
+// }, 10); // update every 10 ms, change at will
 const GAME = {
     isOn: null,
     board: [],
+    audio: {},
     boardMap: {
         size: null,
         aliensRowLength: null,
         aliensRowCount: null
     },
     gameEls: {
-        hero: '✈',
-        alien: '👽',
+        hero: `<div class="rocket">
+        <div class="cone"></div>
+        <div class="first-stage"></div>
+        <div class="second-stage"></div>
+        <div class="third-stage"></div>
+        <div class="right-finn"></div>
+        <div class="left-finn"></div>
+        <div class="first-nozzel"></div>
+        <div class="first-outer-flame"></div>
+        <div class="first-inner-flame"></div>
+        <div class="second-nozzel"></div>
+        <div class="second-outer-flame"></div>
+        <div class="second-inner-flame"></div>
+        <div class="third-nozzel"></div>
+        <div class="third-outer-flame"></div>
+        <div class="third-inner-flame"></div></div>`,
+        alien: `<div class="space-invader space-invader-1 animate"></div>`,
         explode: '💥',
         floor: '🚩',
         laser: ':',
@@ -44,6 +62,7 @@ const GAME = {
         const { domEls } = GAME
         domEls.elBoard = document.querySelector('.board')
         domEls.elHeading = document.querySelector('.heading')
+        domEls.elScrollLabel = document.querySelector('scrollabal')
         // gDomEls.elLife = document.querySelector('.life')
         // gDomEls.elScore = document.querySelector('.score')
         // gDomEls.elTime = document.querySelector('.time')
@@ -63,7 +82,7 @@ function initGame() {
     initAliens()
     const { domEls } = GAME
     console.log('GAME:', GAME)
-    domEls.elCells = document.querySelectorAll('.cell')
+    domEls.elCells = [...document.querySelectorAll('.cell')]
 
     // Aliens
     const { alienMap } = GAME
@@ -84,6 +103,7 @@ function initGame() {
         renderBoard()
     }, 3000)
 }
+
 //*                                                         Board
 function buildBoard() {
     const { size } = GAME.boardMap
@@ -129,6 +149,22 @@ function createCell(pos, gameEl = '') {
         gameEl
     }
 }
+
+function renderCell(pos) {
+    const { i, j } = pos
+    const { elCells } = GAME.domEls
+    return elCells.find((elCell) => elCell.dataset.i === i && elCell.dataset.j === j)
+}
+
+function updateCell(pos, gameEl = '') {
+    const { i, j } = pos
+    const { board } = GAME
+    // Model
+    board[i][j].gameEl = gameEl
+    //  Dom
+    renderCell(pos)
+}
+
 //*                                                         Aliens
 function createAliens(rowIdxStart, rowIdxEnd, colIdxStart, colIdxEnd) {
     console.log('createAliens:')
@@ -146,110 +182,15 @@ function createAliens(rowIdxStart, rowIdxEnd, colIdxStart, colIdxEnd) {
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-function renderCell(pos) {
-    var elCell = getElCell(pos)
-
-    return
-}
-function updateCell(pos, gameEl = '') {
-    const { i, j } = pos
-    const { board } = GAME
-    // Model
-    board[i][j].gameEl = gameEl
-    //  Dom
-    renderCell(pos)
-}
+//*                                                         Score
 function renderScore(diff) {
     GAME.score += diff
-    document.querySelector('.game-container span.score').innerText = GAME.score
-}
-function getElCell(pos) {
-    // console.log(`getElCell(${pos.i},${pos.j})↓`)
-    return document.querySelector(`[data-i='${pos.i}'][data-j='${pos.j}']`)
-}
-function getImgPath(elementName) {
-    var imgPath = ''
-    switch (elementName) {
-        case OBJECTS.laser:
-            imgPath = `<img src="img/${elementName}.png" />`
-            break;
-        case OBJECTS.empty:
-            imgPath = ''
-            break;
-        default:
-            imgPath = `<img src="img/${elementName}.gif" />`
-            break;
-    }
-    return imgPath
-}
-function getRandomIntInclusive(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min
-}
-function playAudio(AudioName, audioEco) {
-    if (audioEco) {
-        audioEco.pause()
-        return
-    }
-    new Audio(`audio/${AudioName}.mp3`).play()
-}
-function openModal(isWin) { // TODO.. 
-    gGame.isOn = false
-    console.log('TODO: open modal with reset Game');
-}
-function getRandEmptyPos() { // TODO.. 
-    var emptyCells = []
-    for (var i = 0; i < gBoard.length; i++) {
-        for (var j = 0; j < gBoard[i].length; j++) {
-            if (gBoard[i][j].gameEl === OBJECTS.empty) {
-                emptyCells.push({ i, j })
-            }
-        }
-    }
-    if (emptyCells.length === 0) return -1
-    return emptyCells.splice(getRandomIntInclusive(0, emptyCells.length - 1), 1)[0]
-}
-function moveObjects(fromPossA, toPossB) { // TODO
-    for (let i = 0; i < fromPossA.length; i++) {
-
-
-    }
-    return
-}
-function moveObject(gameEl, fromPosA, toPosB) { // TODO.
-    // PrevCell
-
-    updateCell(fromPosA)
-    // NextCell
-    updateCell(toPosB, gameEl)
-}
-function playAgin() {
-    document.querySelector('.modal').classList.add('display-none')
-    init()
-    initGame()
-}
-function toggleAliensInt() {
-    if (ALIENS.movementInterval) {
-        document.querySelector('button.unit-testing').innerText = 'Continue'
-        clearInterval(ALIENS.movementInterval)
-        ALIENS.movementInterval = null
-    }
-    else {
-        document.querySelector('button.unit-testing').innerText = 'Pause'
-        ALIENS.movementInterval = setInterval(moveAliens, 2000)
-    }
-    return
-}
-function isValidMove(pos) {
-    if (!GAME.isOn) return false
-    else if (pos.j < 0 || pos.j > gBoard[0].length - 1) return false
-    else if (gBoard[pos.i][pos.j].gameEl !== OBJECTS.empty) return false
-    return true
+    const { elScore } = GAME.domEls
+    elScore.innerText = GAME.score
 }
 
-function initHero() {  //^                       HERO
+function initHero() {  //*                                 HERO
     const { heroMap: hero, gameEls } = GAME
-
     hero.pos = { i: 12, j: 5 }
     hero.isShoot = false
     hero.laserAudio = null
@@ -266,14 +207,11 @@ function initHero() {  //^                       HERO
     }
 }
 
-function getNextLocation(eventKeyboard) {
-    console.log(eventKeyboard.key)
+
+function onMoveHero(eventType) {
     if (!GAME.isOn) return
-    var startShootingPos = {
-        i: HERO.pos.i,
-        j: HERO.pos.j,
-    }
-    switch (eventKeyboard.key) {
+
+    switch (eventType.key) {
         case 'ArrowUp':
             moveHero({ i: HERO.pos.i - 1, j: HERO.pos.j })
             break
@@ -300,10 +238,32 @@ function getNextLocation(eventKeyboard) {
             endShoot()
             break
         default:
-            return null
+            return 
     }
-    return startShootingPos
 }
+//*                                                         Util
+function getRandomIntInclusive(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+function playAudio(audioKey) {
+    const { audio } = GAME.audio
+    const audioEco = audio[audioKey]
+    if (audioEco) audioEco.pause()
+    new Audio(`assets/audio/${audioKey}.mp3`).play()
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+function isValidMove(pos) {
+    const { i, j } = pos
+    const { board ,gameEls} = GAME
+    if (!GAME.isOn) return
+    else if (j < 0 || j > board[0].length - 1) return
+    return true
+}
+
+
 function moveHero(dir) {
     if (!isValidMove(dir)) return
     // PrevCell
@@ -386,8 +346,6 @@ function initAliens() {
     alien.colIdxStart = 3
     alien.colIdxEnd = 10
 }
-
-
 
 // function createAliens(rowIdxStart, rowIdxEnd, colIdxStart, colIdxEnd) {
 //     let newAliens = []

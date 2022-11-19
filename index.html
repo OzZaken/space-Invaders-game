@@ -7,10 +7,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space Invaders</title>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/alien.css">
+    <link rel="stylesheet" href="css/hero.css">
+    <link rel="stylesheet" href="css/game-on.css">
 </head>
 
 <body onload="initGame()" onkeydown="getNextLocation(event)">
     <h1 class="heading">Space Invaders</h1>
+
+    <!-- Lunching Game -->
+    <div id='rocket'></div>
+    <div id='exhaust'></div>
+    <div id='sky'></div>
+    <section>scroll to launch</section>
+    <section></section>
+    <section></section>
+    <section></section>
+
+  
+
+
+
+    <div id="bg-space"></div>
     <section class="space-invaders">
         <div class="game-board">
             <table>
@@ -18,14 +36,10 @@
             </table>
         </div>
     </section>
-    
-    
-    <!-- Note: Keep last child Css -->
-    <div id="bg"></div>
-
     <script src="assets//lib/particles.min.js"></script>
     <script src="js/util.js"></script>
-    <script src="js/bg.js"></script>
+    <script src="js/bg-space.js"></script>
+    <script src="js/game-on.js"></script>
     <script src="js/hero.js"></script>
     <script src="js/alien.js"></script>
     <script src="js/game.js"></script>

@@ -10,11 +10,14 @@ body {
     /* text-align: center; */
     background: black;
     user-select: none;
-    height: 100vh;
+
+    /* height: 100vh; */
+    /* overflow-y: hidden; */
 }
 
 
-#bg {
+#bg-space {
+    /* position: fixed; */
     position: absolute;
     top: 0;
     left: 0;
@@ -26,9 +29,10 @@ body {
 
 /* Heading */
 h1 {
+    text-align: center;
     animation: fadeOutUp 3.4s;
     color: whitesmoke;
-    font-size: 3em;
+    font-size: 5em;
     font-family: 'Times New Roman', Times, serif;
 }
 
@@ -103,7 +107,6 @@ table {
 /* } */
 
 .cell img {
-    border: 1px solid blueviolet;
     max-height: 40px;
     max-width: 40px;
 }
