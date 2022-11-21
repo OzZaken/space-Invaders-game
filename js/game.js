@@ -1,7 +1,4 @@
 'use strict'
-// var scroller = setInterval(function() {  
-//     window.scrollTo(0,document.body.scrollHeight);
-// }, 10); // update every 10 ms, change at will
 const GAME = {
     isOn: null,
     board: [],
@@ -12,30 +9,15 @@ const GAME = {
         aliensRowCount: null
     },
     gameEls: {
-        hero: `<div class="rocket">
-        <div class="cone"></div>
-        <div class="first-stage"></div>
-        <div class="second-stage"></div>
-        <div class="third-stage"></div>
-        <div class="right-finn"></div>
-        <div class="left-finn"></div>
-        <div class="first-nozzel"></div>
-        <div class="first-outer-flame"></div>
-        <div class="first-inner-flame"></div>
-        <div class="second-nozzel"></div>
-        <div class="second-outer-flame"></div>
-        <div class="second-inner-flame"></div>
-        <div class="third-nozzel"></div>
-        <div class="third-outer-flame"></div>
-        <div class="third-inner-flame"></div></div>`,
+        hero: `<div id='hero' class="on-board"></div>`,//
         alien: `<div class="space-invader space-invader-1 animate"></div>`,
+        empty: `<div class="empty-space"></div>`,
         explode: '💥',
         floor: '🚩',
         laser: ':',
         moon: '🌒',
         rocket: '🚀',
         satellite: '🛰'
-
     },
     alienMap: {
         dirPos: null, // | {1,0} left | {0,1} right | {1 ,1} down | {-1 ,-1} up
@@ -47,73 +29,84 @@ const GAME = {
         topRowIdx: null,
         bottomRowIdx: null,
     },
-    heroMap: {
+    hero: {
         pos: {}
     },
     domEls: {
         elHeading: null,
         elBoard: null,
+        elHero: null,
     },
-
 }
 
-    // An IIFE Call the Constant Dom Elements at loading page. 
+    //*                                                               Initiation
     ; (() => {
         const { domEls } = GAME
         domEls.elBoard = document.querySelector('.board')
         domEls.elHeading = document.querySelector('.heading')
-        domEls.elScrollLabel = document.querySelector('scrollabal')
+        domEls.elHero = document.querySelector('#hero')
+        domEls.elSky = document.querySelector('#sky')
+        domEls.elEx = document.querySelector('#exhaust')
+        domEls.elBGSpace = document.querySelectorAll('#bg-space')
         // gDomEls.elLife = document.querySelector('.life')
         // gDomEls.elScore = document.querySelector('.score')
         // gDomEls.elTime = document.querySelector('.time')
         // gDomEls.elUserMsg = document.querySelector('.user-msg')
+        //*                                                           Scroller 
+
     })()
 
 function initGame() {
+    console.log('initGame')
+    document.body.style.zoom = "67%"
+
     // Model
     GAME.score = 0
     GAME.isOn = false
     GAME.aliensCount = 0
-    GAME.boardMap.size = 14
-    GAME.boardMap.aliensRowLength = 8
-    GAME.boardMap.aliensRowCount = 3
+    GAME.isOn = true
+
+    // Board
+    const { boardMap } = GAME
+    boardMap.size = 14
+    boardMap.aliensRowLength = 8
+    boardMap.aliensRowCount = 3
     GAME.board = buildBoard()
-    initHero()
-    initAliens()
     const { domEls } = GAME
-    console.log('GAME:', GAME)
-    domEls.elCells = [...document.querySelectorAll('.cell')]
+    
+    // Hero
+    initHero()
 
     // Aliens
-    const { alienMap } = GAME
-    const { topRowIdx, bottomRowIdx, colIdxStart, colIdxEnd } = alienMap
-    alienMap.aliens = []
+    initAlien()
+    const { topRowIdx, bottomRowIdx, colIdxStart, colIdxEnd } = GAME.alienMap
     createAliens(topRowIdx, bottomRowIdx, colIdxStart, colIdxEnd)
-
+    renderBoard()
+    setTimeout(()=>{
+        domEls.elCells = [...document.querySelectorAll('.cell')]
+    })
     // Intervals
     // GAME.satelliteSpaceInterval = setInterval(addObject, 15000, OBJECTS.satelliteSpaceInterval)
     // toggleAliensInt()
 
     // Game
-    GAME.isOn = true
-    const { elHeading } = GAME.domEls
-    setTimeout(() => {
-        // elHeading.hidden = true
-        elHeading.style.display = 'none'
-        renderBoard()
-    }, 3000)
+    // elHeading.hidden = true
+    // elHeading.style.display = 'none'
+
 }
 
-//*                                                         Board
+
+//*                                                                   Board
 function buildBoard() {
     const { size } = GAME.boardMap
+    const { gameEls } = GAME
     let board = []
     for (let i = 0; i < size; i++) {
         board.push([])
         for (let j = 0; j < size; j++) {
             board[i][j] = {
                 pos: { i, j },
-                gameEl: ''
+                gameEl: gameEls.empty
             }
         }
     }
@@ -126,23 +119,23 @@ function buildBoard() {
 }
 
 function renderBoard() {
-    const { board } = GAME
+    const { board, gameEls } = GAME
     const { elBoard } = GAME.domEls
     let strHTML = ''
     for (let i = 0; i < board.length; i++) {
         strHTML += '<tr>\n'
         for (let j = 0; j < board[0].length; j++) {
             const curCell = board[i][j]
-            const curCellVal = curCell.isHit ? ' ' : curCell.gameEl
-            strHTML += `\t<td data-i="${i}" data-j="${j}">${curCellVal}</td>`
+            const curCellGameEl = curCell.isHit ? gameEls.empty : curCell.gameEl
+            strHTML += `\t<td class="cell" data-i="${i}" data-j="${j}">${curCellGameEl}</td>`
         }
         strHTML += '</tr>'
     }
     elBoard.innerHTML = strHTML
 }
 
-//*                                                         Cell
-function createCell(pos, gameEl = '') {
+//*                                                                   Cell
+function createCell(pos, gameEl = GAME.gameEls.empty) {
     const { i, j } = pos
     return {
         pos: { i, j },
@@ -153,10 +146,14 @@ function createCell(pos, gameEl = '') {
 function renderCell(pos) {
     const { i, j } = pos
     const { elCells } = GAME.domEls
-    return elCells.find((elCell) => elCell.dataset.i === i && elCell.dataset.j === j)
+    const { board } = GAME
+    console.log('elCells:', elCells)
+    const curCell = elCells.find((elCell) => elCell.dataset.i === i && elCell.dataset.j === j)
+    console.log('curCell:', curCell)
+    curCell.innerHTML = board[i][j].gameEl
 }
 
-function updateCell(pos, gameEl = '') {
+function updateCell(pos, gameEl = GAME.gameEls.empty) {
     const { i, j } = pos
     const { board } = GAME
     // Model
@@ -165,83 +162,15 @@ function updateCell(pos, gameEl = '') {
     renderCell(pos)
 }
 
-//*                                                         Aliens
-function createAliens(rowIdxStart, rowIdxEnd, colIdxStart, colIdxEnd) {
-    console.log('createAliens:')
-    const { board, gameEls, alienMap } = GAME
-    const { aliens } = alienMap
-    for (let i = rowIdxStart; i <= rowIdxEnd; i++) {
-        for (let j = colIdxStart; j <= colIdxEnd; j++) {
-            const newAlien = board[i][j]
-            newAlien.gameEl = gameEls.alien
-            newAlien.isHit = false
-            newAlien.pos = { i, j }
-            aliens.push(newAlien)
-            GAME.aliensCount++
-        }
-    }
-}
 
-//*                                                         Score
+//*                                                                 Score
 function renderScore(diff) {
     GAME.score += diff
     const { elScore } = GAME.domEls
     elScore.innerText = GAME.score
 }
 
-function initHero() {  //*                                 HERO
-    const { heroMap: hero, gameEls } = GAME
-    hero.pos = { i: 12, j: 5 }
-    hero.isShoot = false
-    hero.laserAudio = null
-    hero.explodeAudio = null
-    hero.gameEl = gameEls.hero
-    hero.laser = {
-        laserInterval: null,
-        blinkingInterval: null,
-        speed: 80,
-        nextLaserPos: {},
-        pos: {}, // {}
-        possPast: [], // []
-        movingDiff: 1
-    }
-}
-
-
-function onMoveHero(eventType) {
-    if (!GAME.isOn) return
-
-    switch (eventType.key) {
-        case 'ArrowUp':
-            moveHero({ i: HERO.pos.i - 1, j: HERO.pos.j })
-            break
-        case 'ArrowLeft':
-            moveHero({ i: HERO.pos.i, j: HERO.pos.j - 1 })
-            break
-        case 'ArrowRight':
-            moveHero({ i: HERO.pos.i, j: HERO.pos.j + 1 })
-            break
-        case 'ArrowDown':
-            moveHero({ i: HERO.pos.i + 1, j: HERO.pos.j })
-            break
-        case ' ':
-            console.log('HERO.isShoot:', HERO.isShoot)
-            if (HERO.isShoot) return
-            if (gBoard[startShootingPos.i][startShootingPos.j].gameEl === OBJECTS.alien)
-                shoot({ i: HERO.pos.i, j: HERO.pos.j }, OBJECTS.laser)
-            else
-                shoot({ i: HERO.pos.i + HERO.laser.movingDiff, j: HERO.pos.j }, OBJECTS.laser)
-            break
-        case 'p':
-            console.log('pause')
-            toggleAliensInt()
-            endShoot()
-            break
-        default:
-            return 
-    }
-}
-//*                                                         Util
+//*                                                                 Util
 function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
@@ -253,25 +182,26 @@ function playAudio(audioKey) {
     new Audio(`assets/audio/${audioKey}.mp3`).play()
 }
 
+//*                                                                Scroller
+// var scroller = setInterval(()=> {  
+//     window.scrollTo(0,document.body.scrollHeight)
+// }, 10) // update every 10 ms, change at will
+
+// $(window).on('scroll', function() {
+//     if($(window).scrollTop() >= $('.div').offset().top + $('.div').outerHeight() - window.innerHeight) {
+//       alert('Bottom');
+//     }
+//   });
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 function isValidMove(pos) {
     const { i, j } = pos
-    const { board ,gameEls} = GAME
+    const { board, gameEls } = GAME
     if (!GAME.isOn) return
     else if (j < 0 || j > board[0].length - 1) return
     return true
-}
-
-
-function moveHero(dir) {
-    if (!isValidMove(dir)) return
-    // PrevCell
-    updateCell(HERO.pos)
-    // NextCell
-    HERO.pos.i = dir.i
-    HERO.pos.j = dir.j
-    updateCell(HERO.pos, OBJECTS.hero)
 }
 function shoot(pos, shottingType = OBJECTS.laser) {
     // console.log(`shoot(${shottingType} = ${OBJECTS.laser})`)
@@ -333,20 +263,6 @@ function blowUpNeighbors(cellI, cellJ) {
         }
     }
 }
-function initAliens() {
-    // ALIENS.movementSpeed = 1000
-    const { alienMap: alien } = GAME
-
-    alien.aliens = []
-    alien.dirPos = { i: 0, j: 1 }
-    alien.isFreeze = false
-
-    alien.topRowIdx = 1
-    alien.bottomRowIdx = 3
-    alien.colIdxStart = 3
-    alien.colIdxEnd = 10
-}
-
 // function createAliens(rowIdxStart, rowIdxEnd, colIdxStart, colIdxEnd) {
 //     let newAliens = []
 //     const { gameEls ,alienMap} = GAME
@@ -365,7 +281,6 @@ function initAliens() {
 //     }
 //     return newAliens
 // }
-
 
 
 function handleAlienHit(pos) {

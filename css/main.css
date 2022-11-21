@@ -1,3 +1,8 @@
+/* :root { */
+    /* --white-25: rgba(255, 255, 255, .25); */
+    /* --white-50: rgba(255, 255, 255, .5); */
+/* } */
+
 * {
     box-sizing: border-box;
 }
@@ -7,33 +12,21 @@ html {
 }
 
 body {
-    /* text-align: center; */
+    font-family: system-ui;
     background: black;
     user-select: none;
-
-    /* height: 100vh; */
     /* overflow-y: hidden; */
 }
 
 
-#bg-space {
-    /* position: fixed; */
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
-}
 
-
-/* Heading */
+/**                                                          Heading */
 h1 {
     text-align: center;
-    animation: fadeOutUp 3.4s;
     color: whitesmoke;
     font-size: 5em;
     font-family: 'Times New Roman', Times, serif;
+    animation: fadeOutUp 3.4s;
 }
 
 @keyframes fadeOutUp {
@@ -53,71 +46,33 @@ h1 {
     animation-name: fadeOutUp;
 }
 
-/* Board */
-.game-board {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
+/**                                                          Board */
+/* .game-board { */
+    /* position: relative; */
+    /* top: 50%; */
+    /* left: 50%; */
+    /* transform: translate(-50%, -50%); */
+/* } */
 
 table {
     margin: auto;
 }
 
-/* .game-container .game-status { */
-/* font-size: 2rem; */
-/* position: absolute; */
-/* top: 20%; */
-/* left: 20px; */
-/* } */
-
-/* table.game-table, */
-/* .modal { */
-/* box-shadow: 8px 9px 16px 1px #00000052; */
-/* border-radius: 15px; */
-/* border: 0; */
-/* margin: auto; */
-/* background-color: black; */
-/* } */
-
-/* .modal { */
-/* display: flex; */
-/* justify-content: space-evenly; */
-/* flex-flow: column nowrap; */
-/* z-index: 1; */
-/* height: 500px; */
-/* width: 500px; */
-/* background-color: #f64; */
-/* } */
-
-/* .modal button.modal-btn { */
-/* font-size: 1.5rem; */
-/* display: block; */
-/* margin: auto; */
-/* align-items: center; */
-/* align-content: center; */
-/* width: 100px; */
-/* height: 35px; */
-/* } */
-
-
-/* td .cell { */
-/* border: 0; */
-/* } */
-
-.cell img {
-    max-height: 40px;
-    max-width: 40px;
-}
-
 .cell {
-    transition: all 0.5s;
-    height: 40px;
-    width: 40px;
-    min-width: 40px;
+    transition: all 0.3s;
+    border: 0;
+
 }
 
 .display-none {
     display: none;
+}
+
+#bg-space {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
 }

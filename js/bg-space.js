@@ -3,7 +3,7 @@
 particlesJS("bg-space", {
     "particles": {
       "number": {
-        "value": 90,
+        "value": 2000,
         "density": {
           "enable": true,
           "value_area": 315
@@ -28,12 +28,12 @@ particlesJS("bg-space", {
         }
       },
       "opacity": {
-        "value": 0.5,
+        "value": 0.7,
         "random": true,
         "anim": {
           "enable": true,
-          "speed": 0.1,
-          "opacity_min": 0.2,
+          "speed": 0.8,
+          "opacity_min": 0.1,
           "sync": false
         }
       },
@@ -42,7 +42,7 @@ particlesJS("bg-space", {
         "random": true,
         "anim": {
           "enable": true,
-          "speed": 1,
+          "speed": 3,
           "size_min": 0.5,
           "sync": false
         }
@@ -51,8 +51,8 @@ particlesJS("bg-space", {
         "enable": false,
         "distance": 150,
         "color": "#ffffff",
-        "opacity": 0.4,
-        "width": 1
+        "opacity": 0,
+        "width": 0
       },
       "move": {
         "enable": true,
@@ -73,11 +73,11 @@ particlesJS("bg-space", {
       "detect_on": "canvas",
       "events": {
         "onhover": {
-          "enable": true,
+          "enable": false,
           "mode": "grab"
         },
         "onclick": {
-          "enable": true,
+          "enable": false,
           "mode": "push"
         },
         "resize": true
@@ -113,16 +113,16 @@ particlesJS("bg-space", {
   
   
   /* ---- stats.js config ---- */
-  
   var count_particles
   var stats
   var update
-  stats = new Stats
+  stats = new stats
   stats.setMode(0)
   stats.domElement.style.position = 'absolute'
   stats.domElement.style.left = '0px'
   stats.domElement.style.top = '0px'
   document.body.appendChild(stats.domElement)
+
   count_particles = document.querySelector('.js-count-particles')
   update = function() {
     stats.begin()
