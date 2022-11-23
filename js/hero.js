@@ -19,13 +19,14 @@ function initHero() {
     }
 }
 
-function onMoveHero(eventType) {
-    if (!GAME.isOn) return
-    const { hero } = GAME
+function onMoveHero() {
+    // if (!GAME.isOn) return
+            const { hero } = GAME
     const { i, j } = hero
-
-    switch (eventType.key) {
+console.log('event.type.key:', event)
+    switch (event.key) {
         case 'ArrowUp':
+            console.log('ArrowUp:')
             moveHero({ i: i - 1, j: j })
             break
         case 'ArrowLeft':

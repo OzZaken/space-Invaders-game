@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/music.css">
     <link rel="stylesheet" href="css/alien.css">
     <link rel="stylesheet" href="css/hero.css">
     <link rel="stylesheet" href="css/main.css">
+    <title>Space Invaders</title>
 </head>
 
-<body onload="initGame()" onkeydown="onMoveHero(event)">
+<body onload="initGame(); toggleZoomScreen()" onkeydown="onMoveHero()">
     <div id="bg-space"></div>
     <!-- <h1 class="heading">Space Invaders</h1> -->
     <section class="game-board">
@@ -19,6 +21,17 @@
         </table>
     </section>
 
+    <div class="now playing music">
+        <span class="bar n1"></span>
+        <span class="bar n2"></span>
+        <span class="bar n3"></span>
+        <span class="bar n4"></span>
+        <span class="bar n5"></span>
+        <span class="bar n6"></span>
+        <span class="bar n7"></span>
+        <span class="bar n8"></span>
+    </div>
+    <div role="button" onclick="toggle()">Stop music</div>
 
     <script src="assets//lib/particles.min.js"></script>
     <script src="js/bg-space.js"></script>

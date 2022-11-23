@@ -1,11 +1,4 @@
-/* :root { */
-    /* --white-25: rgba(255, 255, 255, .25); */
-    /* --white-50: rgba(255, 255, 255, .5); */
-/* } */
-
-* {
-    box-sizing: border-box;
-}
+* {box-sizing: border-box;}
 
 html {
     font-family: 'lato';
@@ -16,6 +9,7 @@ body {
     background: black;
     user-select: none;
     /* overflow-y: hidden; */
+    overflow-x: hidden;
 }
 
 
@@ -23,7 +17,6 @@ body {
 /**                                                          Heading */
 h1 {
     text-align: center;
-    color: whitesmoke;
     font-size: 5em;
     font-family: 'Times New Roman', Times, serif;
     animation: fadeOutUp 3.4s;
@@ -42,31 +35,22 @@ h1 {
     }
 }
 
-.fadeOutUp {
-    animation-name: fadeOutUp;
-}
+.fadeOutUp {animation-name: fadeOutUp;}
 
 /**                                                          Board */
-/* .game-board { */
-    /* position: relative; */
-    /* top: 50%; */
-    /* left: 50%; */
-    /* transform: translate(-50%, -50%); */
-/* } */
+/* position: relative; */
+/* top: 50%; */
+/* left: 50%; */
+/* transform: translate(-50%, -50%); */
 
-table {
-    margin: auto;
-}
+table {margin: auto;}
 
 .cell {
     transition: all 0.3s;
     border: 0;
-
 }
 
-.display-none {
-    display: none;
-}
+.display-none {display: none;}
 
 #bg-space {
     position: absolute;
@@ -74,5 +58,13 @@ table {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: -1;
+    z-index: -2;
+}
+
+
+
+body {
+    font-family: "Lato", sans-serif;
+    color: whitesmoke;
+    text-align: center;
 }

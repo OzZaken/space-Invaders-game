@@ -1,4 +1,5 @@
 'use strict'
+
 const GAME = {
     isOn: null,
     board: [],
@@ -9,7 +10,7 @@ const GAME = {
         aliensRowCount: null
     },
     gameEls: {
-        hero: `<div id='hero' class="on-board"></div>`,//
+        hero: `<div id='hero' class="on-board"></div>`,
         alien: `<div class="space-invader space-invader-1 animate"></div>`,
         empty: `<div class="empty-space"></div>`,
         explode: '💥',
@@ -41,6 +42,7 @@ const GAME = {
 
     //*                                                               Initiation
     ; (() => {
+        document.body.style.zoom = "90%";
         const { domEls } = GAME
         domEls.elBoard = document.querySelector('.board')
         domEls.elHeading = document.querySelector('.heading')
@@ -48,18 +50,15 @@ const GAME = {
         domEls.elSky = document.querySelector('#sky')
         domEls.elEx = document.querySelector('#exhaust')
         domEls.elBGSpace = document.querySelectorAll('#bg-space')
+        domEls.elMusic = document.querySelector('.music')
         // gDomEls.elLife = document.querySelector('.life')
         // gDomEls.elScore = document.querySelector('.score')
         // gDomEls.elTime = document.querySelector('.time')
         // gDomEls.elUserMsg = document.querySelector('.user-msg')
-        //*                                                           Scroller 
-
     })()
 
 function initGame() {
     console.log('initGame')
-    document.body.style.zoom = "67%"
-
     // Model
     GAME.score = 0
     GAME.isOn = false
@@ -73,7 +72,7 @@ function initGame() {
     boardMap.aliensRowCount = 3
     GAME.board = buildBoard()
     const { domEls } = GAME
-    
+
     // Hero
     initHero()
 
@@ -82,7 +81,7 @@ function initGame() {
     const { topRowIdx, bottomRowIdx, colIdxStart, colIdxEnd } = GAME.alienMap
     createAliens(topRowIdx, bottomRowIdx, colIdxStart, colIdxEnd)
     renderBoard()
-    setTimeout(()=>{
+    setTimeout(() => {
         domEls.elCells = [...document.querySelectorAll('.cell')]
     })
     // Intervals
@@ -94,7 +93,6 @@ function initGame() {
     // elHeading.style.display = 'none'
 
 }
-
 
 //*                                                                   Board
 function buildBoard() {
@@ -147,9 +145,7 @@ function renderCell(pos) {
     const { i, j } = pos
     const { elCells } = GAME.domEls
     const { board } = GAME
-    console.log('elCells:', elCells)
     const curCell = elCells.find((elCell) => elCell.dataset.i === i && elCell.dataset.j === j)
-    console.log('curCell:', curCell)
     curCell.innerHTML = board[i][j].gameEl
 }
 
@@ -162,7 +158,6 @@ function updateCell(pos, gameEl = GAME.gameEls.empty) {
     renderCell(pos)
 }
 
-
 //*                                                                 Score
 function renderScore(diff) {
     GAME.score += diff
@@ -170,17 +165,7 @@ function renderScore(diff) {
     elScore.innerText = GAME.score
 }
 
-//*                                                                 Util
-function getRandomIntInclusive(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min
-}
 
-function playAudio(audioKey) {
-    const { audio } = GAME.audio
-    const audioEco = audio[audioKey]
-    if (audioEco) audioEco.pause()
-    new Audio(`assets/audio/${audioKey}.mp3`).play()
-}
 
 //*                                                                Scroller
 // var scroller = setInterval(()=> {  
