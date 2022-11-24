@@ -9,10 +9,16 @@ function playAudio(audioKey) {
     if (audioEco) audioEco.pause()
     new Audio(`assets/audio/${audioKey}.mp3`).play()
 }
-function toggle(button) {
-    const {elMusic} = GAME.domEls
-    elMusic.classList.toggle("paused")
-    if (button.innerHTML == "Kill the Joy.") {
-        button.innerHTML = "Crank it up!"
-    } else button.innerHTML = "Kill the Joy."
+
+// Music
+function initMusic(){
+    let strHTML = ''
+    for (let i = 1; i <= 10; i++) {
+        strHTML+=`<span class="bar n${i}"></span>`
+    }
+    document.querySelector('.music').innerHTML = strHTML
+}
+
+function toggleMusic() {
+    document.querySelector('.music').classList.toggle("paused")
 }

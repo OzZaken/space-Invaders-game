@@ -289,45 +289,7 @@
 
 /* /// */
 .empty-space {
-    box-shadow:
-    0 0 0 .25em transparent,
-    0 .25em 0 .25em transparent,
-    -.625em .375em 0 .125em transparent,
-    .625em .375em 0 .125em transparent,
-    -.75em -.75em 0 0 transparent,
-    .75em -.75em 0 0 transparent,
-    -.5em -.5em 0 0 transparent,
-    .5em -.5em 0 0 transparent,
-    -.75em -.25em 0 0 transparent,
-    -.5em -.25em 0 0 transparent,
-    .5em -.25em 0 0 transparent,
-    .75em -.25em 0 0 transparent,
-    -1em 0 0 0 transparent,
-    -.75em 0 0 0 transparent,
-    .75em 0 0 0 transparent,
-    1em 0 0 0 transparent,
-    -1em .25em 0 0 transparent,
-    1em .25em 0 0 transparent,
-    -.75em .75em 0 0 transparent,
-    .75em .75em 0 0 transparent,
-    /* Left Arm */
-    1.25em .25em 0 0 transparent,
-    1.25em .5em 0 0 transparent,
-    1.25em .75em 0 0 transparent,
-    /* Right Arm */
-    -1.25em .25em 0 0 transparent,
-    -1.25em .5em 0 0 transparent,
-    -1.25em .75em 0 0 transparent,
-    /* Left Foot */
-    -.25em 1em 0 0 transparent,
-    -.5em 1em 0 0 transparent,
-    /* Right Foot */
-    .25em 1em 0 0 transparent,
-    .5em 1em 0 0 transparent;
-    border: 2px solid transparent;
-    background: transparent;
-    background-color: transparent;
-    width: 0.15em;
-    height: 0.15em;
+    width: 0.15rem;
+    height: 0.15rem;
     margin: 30px 30px;
 }

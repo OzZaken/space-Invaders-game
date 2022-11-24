@@ -5,11 +5,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Invaders</title>
-    <link rel="stylesheet" href="css/music.css">
+    <link rel="stylesheet" href="css/alien.css">
+    <link rel="stylesheet" href="css/hero.css">
+    <link rel="stylesheet" href="css/main.css">
+    <title></title>
 </head>
 
-<body onload="initGame();initMusic()" onkeydown="onMoveHero()">
+<body onload="initGame()" onkeydown="onMoveHero()">
+    <div id="bg-space"></div>
     <!-- <h1 class="heading">Space Invaders</h1> -->
     <section class="game-board">
         <table>
@@ -19,16 +22,11 @@
 
     
 
-
+    <script src="assets//lib/particles.min.js"></script>
+    <script src="js/bg-space.js"></script>
     <script src="js/hero.js"></script>
     <script src="js/alien.js"></script>
     <script src="js/game.js"></script>
-    <div onclick="toggleMusic()" role="button" class="music"></div>
-
-    <div class="stars"></div>
-    <div class="stars2"></div>
-    <div class="stars3"></div>
-    <script src="js/util.js"></script>
 </body>
 
 </html>

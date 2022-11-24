@@ -21,9 +21,10 @@ function initHero() {
 
 function onMoveHero() {
     // if (!GAME.isOn) return
-            const { hero } = GAME
+    const { hero } = GAME
     const { i, j } = hero
-console.log('event.type.key:', event)
+    console.log('hero:',hero )
+    console.log('event.type.key:', event)
     switch (event.key) {
         case 'ArrowUp':
             console.log('ArrowUp:')
@@ -58,6 +59,7 @@ console.log('event.type.key:', event)
 function moveHero(dirPos) {
     if (!isValidMove(dirPos)) return
     const { i, j } = dirPos
+    console.log('dirPos:', dirPos)
     const { hero, gameEls } = GAME
     // PrevCell
     updateCell(hero.pos)

@@ -52,17 +52,6 @@ table {margin: auto;}
 
 .display-none {display: none;}
 
-#bg-space {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -2;
-}
-
-
-
 body {
     font-family: "Lato", sans-serif;
     color: whitesmoke;

@@ -42,7 +42,6 @@ const GAME = {
 
     //*                                                               Initiation
     ; (() => {
-        document.body.style.zoom = "90%";
         const { domEls } = GAME
         domEls.elBoard = document.querySelector('.board')
         domEls.elHeading = document.querySelector('.heading')
@@ -55,10 +54,15 @@ const GAME = {
         // gDomEls.elScore = document.querySelector('.score')
         // gDomEls.elTime = document.querySelector('.time')
         // gDomEls.elUserMsg = document.querySelector('.user-msg')
+        // window.onresize = () => {
+        //     location.reload()
+        // }
     })()
 
 function initGame() {
+    document.body.style.zoom = "90%";
     console.log('initGame')
+
     // Model
     GAME.score = 0
     GAME.isOn = false
@@ -142,10 +146,12 @@ function createCell(pos, gameEl = GAME.gameEls.empty) {
 }
 
 function renderCell(pos) {
+    console.log('pos:', pos)
     const { i, j } = pos
     const { elCells } = GAME.domEls
     const { board } = GAME
-    const curCell = elCells.find((elCell) => elCell.dataset.i === i && elCell.dataset.j === j)
+    console.log('elCells:', elCells)
+    const curCell = elCells.find(elCell => elCell.dataset.i === i && elCell.dataset.j === j)
     curCell.innerHTML = board[i][j].gameEl
 }
 
@@ -164,19 +170,6 @@ function renderScore(diff) {
     const { elScore } = GAME.domEls
     elScore.innerText = GAME.score
 }
-
-
-
-//*                                                                Scroller
-// var scroller = setInterval(()=> {  
-//     window.scrollTo(0,document.body.scrollHeight)
-// }, 10) // update every 10 ms, change at will
-
-// $(window).on('scroll', function() {
-//     if($(window).scrollTop() >= $('.div').offset().top + $('.div').outerHeight() - window.innerHeight) {
-//       alert('Bottom');
-//     }
-//   });
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
