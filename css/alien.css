@@ -1,11 +1,12 @@
 .space-invader {
+    display: flex;
     border: 2px solid #fff;
-    background: transparent;
+    /* background: transparent; */
     background-color: #fff;
-    float: left;
+    position: relative;
     width: 0.15em;
     height: 0.15em;
-    margin: 30px 30px;
+    margin-left: 30px ;
 }
 
 .space-invader-defender {
@@ -155,28 +156,18 @@
         .625em 1em 0 0 #fff;
 }
 
-.space-invader.animate {
-    animation: 1s infinite;
-}
+.space-invader.animate {animation: 1s infinite;}
 
-.space-invader.classic {
-    animation: 1s step-end infinite;
-}
+.space-invader.classic {animation: 1s step-end infinite;}
 
 .space-invader-1.animate,
-.space-invader-1.classic {
-    animation-name: space-invader-1;
-}
+.space-invader-1.classic {animation-name: space-invader-1;}
 
 .space-invader-2.animate,
-.space-invader-2.classic {
-    animation-name: space-invader-2;
-}
+.space-invader-2.classic {animation-name: space-invader-2;}
 
 .space-invader-3.animate,
-.space-invader-3.classic {
-    animation-name: space-invader-3;
-}
+.space-invader-3.classic {animation-name: space-invader-3;}
 
 @keyframes space-invader-1 {
     50% {
@@ -288,46 +279,8 @@
 }
 
 /* /// */
-.empty-space {
-    box-shadow:
-    0 0 0 .25em transparent,
-    0 .25em 0 .25em transparent,
-    -.625em .375em 0 .125em transparent,
-    .625em .375em 0 .125em transparent,
-    -.75em -.75em 0 0 transparent,
-    .75em -.75em 0 0 transparent,
-    -.5em -.5em 0 0 transparent,
-    .5em -.5em 0 0 transparent,
-    -.75em -.25em 0 0 transparent,
-    -.5em -.25em 0 0 transparent,
-    .5em -.25em 0 0 transparent,
-    .75em -.25em 0 0 transparent,
-    -1em 0 0 0 transparent,
-    -.75em 0 0 0 transparent,
-    .75em 0 0 0 transparent,
-    1em 0 0 0 transparent,
-    -1em .25em 0 0 transparent,
-    1em .25em 0 0 transparent,
-    -.75em .75em 0 0 transparent,
-    .75em .75em 0 0 transparent,
-    /* Left Arm */
-    1.25em .25em 0 0 transparent,
-    1.25em .5em 0 0 transparent,
-    1.25em .75em 0 0 transparent,
-    /* Right Arm */
-    -1.25em .25em 0 0 transparent,
-    -1.25em .5em 0 0 transparent,
-    -1.25em .75em 0 0 transparent,
-    /* Left Foot */
-    -.25em 1em 0 0 transparent,
-    -.5em 1em 0 0 transparent,
-    /* Right Foot */
-    .25em 1em 0 0 transparent,
-    .5em 1em 0 0 transparent;
-    border: 2px solid transparent;
-    background: transparent;
-    background-color: transparent;
-    width: 0.15em;
-    height: 0.15em;
+.empty {
+    width: 0.15rem;
+    height: 0.15rem;
     margin: 30px 30px;
 }

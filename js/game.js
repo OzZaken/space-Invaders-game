@@ -1,42 +1,19 @@
 'use strict'
+
 const GAME = {
-    isOn: null,
     board: [],
-    audio: {},
-    boardMap: {
-        size: null,
-        aliensRowLength: null,
-        aliensRowCount: null
-    },
+    domEls: {},
+    hero: {},
+    boardMap: {},
     gameEls: {
-        hero: `<div id='hero' class="on-board"></div>`,//
-        alien: `<div class="space-invader space-invader-1 animate"></div>`,
-        empty: `<div class="empty-space"></div>`,
-        explode: '💥',
-        floor: '🚩',
-        laser: ':',
-        moon: '🌒',
-        rocket: '🚀',
-        satellite: '🛰'
+        hero: '<div class="hero"><img src="assets/img/hero.svg" alt="spaceShip"><div/>',
+        alien: '<div class="space-invader space-invader-1 animate"><div/>',
+        moon: '🌓',
+        laser: '|',
+        empty: '',
+        floor: '🕸',
     },
-    alienMap: {
-        dirPos: null, // | {1,0} left | {0,1} right | {1 ,1} down | {-1 ,-1} up
-        aliensCount: null,
-        movementInterval: null,
-        aliens: null,
-        idx: null,
-        movementSpeed: null,
-        topRowIdx: null,
-        bottomRowIdx: null,
-    },
-    hero: {
-        pos: {}
-    },
-    domEls: {
-        elHeading: null,
-        elBoard: null,
-        elHero: null,
-    },
+    alienMap: {},
 }
 
     //*                                                               Initiation
@@ -44,57 +21,43 @@ const GAME = {
         const { domEls } = GAME
         domEls.elBoard = document.querySelector('.board')
         domEls.elHeading = document.querySelector('.heading')
-        domEls.elHero = document.querySelector('#hero')
-        domEls.elSky = document.querySelector('#sky')
-        domEls.elEx = document.querySelector('#exhaust')
-        domEls.elBGSpace = document.querySelectorAll('#bg-space')
+        domEls.elMusic = document.querySelector('.music')
         // gDomEls.elLife = document.querySelector('.life')
         // gDomEls.elScore = document.querySelector('.score')
         // gDomEls.elTime = document.querySelector('.time')
         // gDomEls.elUserMsg = document.querySelector('.user-msg')
-        //*                                                           Scroller 
-
+        // window.onresize = () => {
+        //     location.reload()
+        // }
     })()
 
 function initGame() {
-    console.log('initGame')
-    document.body.style.zoom = "67%"
+    // document.body.style.zoom = "90%";
 
     // Model
-    GAME.score = 0
-    GAME.isOn = false
-    GAME.aliensCount = 0
     GAME.isOn = true
-
-    // Board
+    GAME.score = 0
+    GAME.aliensCount = 0
     const { boardMap } = GAME
     boardMap.size = 14
     boardMap.aliensRowLength = 8
     boardMap.aliensRowCount = 3
     GAME.board = buildBoard()
-    const { domEls } = GAME
-    
-    // Hero
     initHero()
-
-    // Aliens
     initAlien()
     const { topRowIdx, bottomRowIdx, colIdxStart, colIdxEnd } = GAME.alienMap
     createAliens(topRowIdx, bottomRowIdx, colIdxStart, colIdxEnd)
     renderBoard()
-    setTimeout(()=>{
-        domEls.elCells = [...document.querySelectorAll('.cell')]
-    })
-    // Intervals
-    // GAME.satelliteSpaceInterval = setInterval(addObject, 15000, OBJECTS.satelliteSpaceInterval)
-    // toggleAliensInt()
+    GAME.domEls.elCells = [...document.querySelectorAll('.cell')]
 
     // Game
     // elHeading.hidden = true
     // elHeading.style.display = 'none'
-
 }
 
+function onStartPlay() {
+
+}
 
 //*                                                                   Board
 function buildBoard() {
@@ -104,17 +67,12 @@ function buildBoard() {
     for (let i = 0; i < size; i++) {
         board.push([])
         for (let j = 0; j < size; j++) {
-            board[i][j] = {
-                pos: { i, j },
-                gameEl: gameEls.empty
-            }
+            board[i][j] = { pos: { i, j } }
+            if (j === size - 1) board[i][j].gameEl === gameEls.floor
         }
     }
-    // board[0][GAME.boardMap.size - 1].gameEl = OBJECTS.moon
+    board[0][GAME.boardMap.size - 1].gameEl = gameEls.moon
     // board[7][1].gameEl = OBJECTS.satelliteSpace
-    // for (let i = 0; i < size; i++) {
-    //     board[size - 1][i].gameEl = OBJECTS.floor
-    // }
     return board
 }
 
@@ -126,8 +84,8 @@ function renderBoard() {
         strHTML += '<tr>\n'
         for (let j = 0; j < board[0].length; j++) {
             const curCell = board[i][j]
-            const curCellGameEl = curCell.isHit ? gameEls.empty : curCell.gameEl
-            strHTML += `\t<td class="cell" data-i="${i}" data-j="${j}">${curCellGameEl}</td>`
+            const curCellVal = curCell.isHit ? '' : curCell.gameEl
+            strHTML += `\t<td class="cell" data-i="${i}" data-j="${j}">${curCellVal || ''}</td>`
         }
         strHTML += '</tr>'
     }
@@ -135,7 +93,7 @@ function renderBoard() {
 }
 
 //*                                                                   Cell
-function createCell(pos, gameEl = GAME.gameEls.empty) {
+function createCell(pos, gameEl = '') {
     const { i, j } = pos
     return {
         pos: { i, j },
@@ -145,15 +103,14 @@ function createCell(pos, gameEl = GAME.gameEls.empty) {
 
 function renderCell(pos) {
     const { i, j } = pos
-    const { elCells } = GAME.domEls
     const { board } = GAME
-    console.log('elCells:', elCells)
-    const curCell = elCells.find((elCell) => elCell.dataset.i === i && elCell.dataset.j === j)
-    console.log('curCell:', curCell)
-    curCell.innerHTML = board[i][j].gameEl
+    const { elCells } = GAME.domEls
+    const curCell = elCells.find(elCell => +elCell.dataset.i === i && +elCell.dataset.j === j)
+    if (board[i][j].gameEl) curCell.innerHTML = board[i][j].gameEl
+    else curCell.innerText = ''
 }
 
-function updateCell(pos, gameEl = GAME.gameEls.empty) {
+function updateCell(pos, gameEl = '') {
     const { i, j } = pos
     const { board } = GAME
     // Model
@@ -162,7 +119,6 @@ function updateCell(pos, gameEl = GAME.gameEls.empty) {
     renderCell(pos)
 }
 
-
 //*                                                                 Score
 function renderScore(diff) {
     GAME.score += diff
@@ -170,90 +126,18 @@ function renderScore(diff) {
     elScore.innerText = GAME.score
 }
 
-//*                                                                 Util
-function getRandomIntInclusive(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min
-}
-
-function playAudio(audioKey) {
-    const { audio } = GAME.audio
-    const audioEco = audio[audioKey]
-    if (audioEco) audioEco.pause()
-    new Audio(`assets/audio/${audioKey}.mp3`).play()
-}
-
-//*                                                                Scroller
-// var scroller = setInterval(()=> {  
-//     window.scrollTo(0,document.body.scrollHeight)
-// }, 10) // update every 10 ms, change at will
-
-// $(window).on('scroll', function() {
-//     if($(window).scrollTop() >= $('.div').offset().top + $('.div').outerHeight() - window.innerHeight) {
-//       alert('Bottom');
-//     }
-//   });
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-function isValidMove(pos) {
+function isOnBoard(pos) {
     const { i, j } = pos
-    const { board, gameEls } = GAME
-    if (!GAME.isOn) return
-    else if (j < 0 || j > board[0].length - 1) return
+    const { board } = GAME
+    if (
+        j < 0 || // Left
+        j > board[0].length - 1 || // Right
+        i < 0 || // Up
+        i > board[0].length - 1 // Down
+    ) return false
     return true
 }
-function shoot(pos, shottingType = OBJECTS.laser) {
-    // console.log(`shoot(${shottingType} = ${OBJECTS.laser})`)
 
-    HERO.isShoot = true
-    HERO.laser.pos = { i: pos.i + HERO.laser.movingDiff, j: HERO.pos.j }
-
-    // if (shottingType === OBJECTS.laser) {
-    HERO.laser.laserInterval = setInterval(blinkLaser, HERO.laser.speed, HERO.laser.pos)
-    // }
-    // else if (missile === OBJECTS.rocket) console.log('shooting rocket')
-    return
-}
-function endShoot() {
-    clearInterval(HERO.laser.laserInterval)
-    HERO.laser.laserInterval = null
-    HERO.isShoot = false
-    renderBoard() //TODO Check All cell in place
-}
-function blinkLaser(pos) {
-    if (gBoard[pos.i][pos.j].gameEl === OBJECTS.alien) {
-        console.log('(gBoard[pos.i][pos.j].gameEl === OBJECTS.alien) ');
-        endShoot()
-    }
-    else if (!pos.i || pos.i <= 0) {
-        console.log('(!pos.i || pos.i <= 0) valid Move Function?');
-        endShoot()
-        return
-    }
-    else
-        console.log('blinkLaser(pos) → HERO.laser.pos:', HERO.laser.pos)
-    playAudio(OBJECTS.laser, HERO.laserAudio)
-    var prevLaserPos = {
-        i: HERO.laser.pos.i + 1,
-        j: HERO.laser.pos.j
-    }
-    for (let i = 0; i < 2; i++) {
-        blinkingCell(prevLaserPos)
-    }
-
-    if (gBoard[HERO.laser.pos.i][HERO.laser.pos.j].gameEl === OBJECTS.alien) {
-        console.log('gBoard[HERO.laser.pos.i][HERO.laser.pos.j]:', gBoard[HERO.laser.pos.i][HERO.laser.pos.j])
-        handleAlienHit(pos)
-        return
-    }
-    HERO.laser.pos.i = HERO.laser.pos.i + HERO.laser.movingDiff
-    return
-}
-function blinkingCell(pos, gameEl = OBJECTS.laser) {
-    updateCell(pos, OBJECTS.laser)
-    setTimeout(updateCell, HERO.laser.speed / 2, pos)
-}
 function blowUpNeighbors(cellI, cellJ) {
     for (let i = cellI; i <= cellI + 1; i++) {
         if (i < 0 || i > mat.length) continue
@@ -263,6 +147,7 @@ function blowUpNeighbors(cellI, cellJ) {
         }
     }
 }
+
 // function createAliens(rowIdxStart, rowIdxEnd, colIdxStart, colIdxEnd) {
 //     let newAliens = []
 //     const { gameEls ,alienMap} = GAME
@@ -275,7 +160,6 @@ function blowUpNeighbors(cellI, cellJ) {
 //                 isHit: false,
 //                 currPos: { i, j },
 //             })
-
 //             GAME.aliensCount++
 //         }
 //     }
@@ -283,28 +167,6 @@ function blowUpNeighbors(cellI, cellJ) {
 // }
 
 
-function handleAlienHit(pos) {
-    console.log(`handleAlienHit(${pos.i},${pos.j})`)
-    //Alien
-    gBoard[HERO.laser.pos.i][HERO.laser.pos.j].isHit = true
-    console.log('gBoard[HERO.laser.pos.i][HERO.laser.pos.j]:', gBoard[HERO.laser.pos.i][HERO.laser.pos.j])
-    console.log('ALIEN.aliens:', ALIENS.aliens)
-    console.log('gBoard:', gBoard)
-    //Dom
-    updateCell(pos, OBJECTS.explode)
-    playAudio(OBJECTS.explode, HERO.explodeAudio)
-    setTimeout(updateCell, 800, pos)
-    // GAME
-    GAME.aliensCount--
-    if (GAME.aliensCount === 0) {
-        GAME.isOn = false
-        document.querySelector('.modal').classList.remove('display-none')
-    }
-    renderScore(10)
-    // HERO
-    endShoot()
-    return
-}
 
 function getLiveAliensPoss() {
     var liveAliensPoss = []

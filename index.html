@@ -6,22 +6,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/alien.css">
-    <link rel="stylesheet" href="css/hero.css">
     <link rel="stylesheet" href="css/main.css">
 </head>
 
-<body onload="initGame()" onkeydown="onMoveHero(event)">
-    <div id="bg-space"></div>
+<body onload="initGame()" onkeydown="onHeroEvent(event)">
     <!-- <h1 class="heading">Space Invaders</h1> -->
-    <section class="game-board">
         <table>
             <tbody class="board"></tbody>
         </table>
-    </section>
-
-
-    <script src="assets//lib/particles.min.js"></script>
+    
+    <div id="bg-space"></div>
+    <script src="assets/lib/particles.min.js"></script>
     <script src="js/bg-space.js"></script>
+
     <script src="js/util.js"></script>
     <script src="js/hero.js"></script>
     <script src="js/alien.js"></script>
