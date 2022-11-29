@@ -1,5 +1,6 @@
 'use strict'
 
+
 const GAME = {
     board: [],
     domEls: {},
@@ -102,6 +103,7 @@ function createCell(pos, gameEl = '') {
 }
 
 function renderCell(pos) {
+    console.log('pos:', pos)
     const { i, j } = pos
     const { board } = GAME
     const { elCells } = GAME.domEls

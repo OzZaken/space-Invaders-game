@@ -11,20 +11,20 @@ body {
     font-family: system-ui, sans-serif;
     background: black;
     user-select: none;
-    height: 100%;
     color: whitesmoke;
     text-align: center;
+    /* height: 100%; */
     /* overflow-y: hidden; */
+    /* overflow-x: hidden; */
 }
 
-image {
+img {
     width: 100%;
 }
 
 /**                                                          Heading */
 h1 {
     text-align: center;
-    color: whitesmoke;
     font-size: 5em;
     font-family: 'Times New Roman', Times, serif;
     animation: fadeOutUp 3.4s;
@@ -43,15 +43,13 @@ h1 {
     }
 }
 
-.fadeOutUp {
-    animation-name: fadeOutUp;
-}
+.fadeOutUp {animation-name: fadeOutUp;}
 
 /**                                                          Board */
 table {
     border: 1px solid yellow;
     margin: auto;
-    width: 100%;
+    /* width: 100%; */
     border-collapse: separate;
 }
 
@@ -65,8 +63,11 @@ table {
     border: 0;
 }
 
-.display-none {
-    display: none;
+.display-none {display: none;}
+
+.hero {
+    max-width: 35px;
+    margin: auto;
 }
 
 .hero {
@@ -83,5 +84,13 @@ table {
     z-index: -1;
 }
 
+#particles-js {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -2;
+}
 /* @import "css/alien.css"; */
 /* @import "bg.css"; */
