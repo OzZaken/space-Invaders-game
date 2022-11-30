@@ -34,24 +34,14 @@ function alienHit(pos) {
     const { board, gameEls } = GAME
     const { liveAliens,deadAliens } = GAME.alienMap
     const cell = board[i][j]
-    endShoot()
-
     cell.isHit = true
+    endShoot()
     blinkCell(pos, gameEls.explode, 780)
     playAudio('explode')
-    console.log('liveAliens:',  liveAliens)
     const alienIdx = liveAliens.findIndex(alien => alien.isHit)
     deadAliens.push(liveAliens.splice(alienIdx,1))
-    console.log('liveAliens:',  liveAliens.length)
-    console.log('deadAliens:',  deadAliens.length)
-}
-
-function handleAlienHit1(pos) {
-    // Dom
-    GAME.aliensCount--
-    if (GAME.aliensCount === 0) {
-        GAME.isOn = false
-        document.querySelector('.modal').classList.remove('display-none')
+    setScore(10)
+    if(!liveAliens.length){
+        console.log('win:', liveAliens)
     }
-    renderScore(10)
 }

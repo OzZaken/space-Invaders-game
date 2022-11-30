@@ -25,8 +25,8 @@ const GAME = {
         domEls.elBoard = document.querySelector('.board')
         domEls.elHeading = document.querySelector('.heading')
         domEls.elMusic = document.querySelector('.music')
+        domEls.elScore = document.querySelector('.score')
         // gDomEls.elLife = document.querySelector('.life')
-        // gDomEls.elScore = document.querySelector('.score')
         // gDomEls.elTime = document.querySelector('.time')
         // gDomEls.elUserMsg = document.querySelector('.user-msg')
         // window.onresize = () => {
@@ -157,7 +157,7 @@ function isOnBoard(pos) {
 }
 
 //*                                                                 Score
-function renderScore(diff) {
+function setScore(diff) {
     GAME.score += diff
     const { elScore } = GAME.domEls
     elScore.innerText = GAME.score
