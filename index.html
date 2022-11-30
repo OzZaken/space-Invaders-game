@@ -10,11 +10,17 @@
 </head>
 
 <body onload="initGame()" onkeydown="onHeroEvent(event)">
-    <!-- <h1 class="heading">Space Invaders</h1> -->
-        <table>
-            <tbody class="board"></tbody>
-        </table>
-    
+    <button onclick="onStopMusic()">Stop Music</button>
+    <h1 class="heading">Space Invaders</h1>
+    <table>
+        <tbody class="board">
+            <thead>
+                <th class="score">score:</th>
+            </thead>
+        </tbody>
+    </table>
+
+
     <div id="particles-js"></div>
     <script src="assets/lib/particles.min.js"></script>
     <script src="js/bg.js"></script>

@@ -14,12 +14,22 @@ body {
     color: whitesmoke;
     text-align: center;
     /* height: 100%; */
-    /* overflow-y: hidden; */
+    overflow-y: hidden;
     /* overflow-x: hidden; */
 }
 
 img {
     width: 100%;
+}
+td img {
+    max-height: 33px
+}
+/**                                                          Board */
+table {
+    border: 1px solid rgba(222, 222, 222, 0.222);
+    margin: auto;
+    border-spacing: 1em;
+    border-collapse: separate;
 }
 
 /**                                                          Heading */
@@ -43,24 +53,17 @@ h1 {
     }
 }
 
-.fadeOutUp {animation-name: fadeOutUp;}
-
-/**                                                          Board */
-table {
-    border: 1px solid yellow;
-    margin: auto;
-    /* width: 100%; */
-    border-collapse: separate;
-}
+/* .fadeOutUp {animation-name: fadeOutUp;} */
 
 .cell {
-    background-color: rgba(222, 200, 200, 0.424);
-    min-height: 35px;
-    height: 35px;
-    min-width: 35px;
     width: 35px;
+    height: 35px;
     transition: all .3s;
-    border: 0;
+}
+.score{
+    position: fixed;
+    top: 30%;
+    left: 0;
 }
 
 .display-none {display: none;}
@@ -70,9 +73,65 @@ table {
     margin: auto;
 }
 
-.hero {
-    max-width: 35px;
-    margin: auto;
+.emoji {
+    min-width: 1.4em;
+    margin: 0.3em 0.4em;
+    text-align: center; 
+}
+.emoji::after {
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+.moon::after {
+    content: '🌕';
+    animation-name: moon;
+    animation-duration: 5s;
+}
+@keyframes moon {
+    12.5% {
+        content: '🌖';
+    }
+
+    25% {
+        content: '🌗';
+    }
+
+    37.5% {
+        content: '🌘 ';
+    }
+
+    50% {
+        content: '🌑';
+    }
+
+    62.5% {
+        content: '🌒';
+    }
+
+    75% {
+        content: '🌓';
+    }
+
+    87.5% {
+        content: '🌔';
+    }
+}
+
+.earth::after {
+    content: '🌎';
+    --emoji-1: '🌍';
+    --emoji-2: '🌏';
+    animation-name: threeFrames;
+    animation-duration: 1.5s;
+}
+@keyframes threeFrames {
+    33.333% {
+        content: var(--emoji-1);
+    }
+
+    66.666% {
+        content: var(--emoji-2);
+    }
 }
 
 #bg-space {
@@ -91,6 +150,14 @@ table {
     height: 100%;
     width: 100%;
     z-index: -2;
+}
+td div{
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+.floor{
+    background-color: rgba(255, 0, 0, 0.418);
 }
 /* @import "css/alien.css"; */
 /* @import "bg.css"; */

@@ -1,23 +1,25 @@
 'use strict'
 
-
+//*                                                               Initiation
 const GAME = {
     board: [],
     domEls: {},
     hero: {},
     boardMap: {},
-    gameEls: {
-        hero: '<div class="hero"><img src="assets/img/hero.svg" alt="spaceShip"><div/>',
-        alien: '<div class="space-invader space-invader-1 animate"><div/>',
-        moon: '🌓',
-        laser: '|',
-        empty: '',
-        floor: '🕸',
-    },
     alienMap: {},
+    gameEls: {
+        empty: '',//'' === false // ' ' === true
+        hero: '<div class="hero" role="img"><img src="assets/img/hero.svg" alt="spaceShip"><div/>',
+        alien: '<div class="space-invader space-invader-1 animate" role="img"><div/>',
+        moon: '<div class="emoji moon" role="img"></div>',
+        laser: '<div class="laser" role="img"><img src="assets/img/laser.png" alt="Laser Shoot"><div/>',
+        satellite: '<div class="satellite" role="img"><img src="assets/img/satellite.gif" alt="spaceShip"></div>',
+        explode: '<div class="explode" role="img"><img src="assets/img/explode.gif" alt="Exploding"></div>',
+        floor: '<div class="floor" role="img"></div>',
+    },
+    audio: {},
 }
 
-    //*                                                               Initiation
     ; (() => {
         const { domEls } = GAME
         domEls.elBoard = document.querySelector('.board')
@@ -33,10 +35,9 @@ const GAME = {
     })()
 
 function initGame() {
-    // document.body.style.zoom = "90%";
+    document.body.style.zoom = "90%";
 
     // Model
-    GAME.isOn = true
     GAME.score = 0
     GAME.aliensCount = 0
     const { boardMap } = GAME
@@ -52,12 +53,19 @@ function initGame() {
     GAME.domEls.elCells = [...document.querySelectorAll('.cell')]
 
     // Game
+    startPlay()
     // elHeading.hidden = true
     // elHeading.style.display = 'none'
 }
+function startPlay() {
+    const { audio } = GAME
+    // audio['music'] = playAudio('music')
+    // console.log('audio:', audio)
+    // console.dir(audio['music'])
 
-function onStartPlay() {
 
+    // console.dir(GAME.audio['game'] )
+    GAME.isOn = true
 }
 
 //*                                                                   Board
@@ -68,15 +76,19 @@ function buildBoard() {
     for (let i = 0; i < size; i++) {
         board.push([])
         for (let j = 0; j < size; j++) {
-            board[i][j] = { pos: { i, j } }
-            if (j === size - 1) board[i][j].gameEl === gameEls.floor
+            board[i][j] = {
+                id: makeId(),
+                pos: { i, j }
+            }
+            if (i === size - 1) {
+                board[i][j].gameEl = gameEls.floor
+            }
         }
     }
-    board[0][GAME.boardMap.size - 1].gameEl = gameEls.moon
-    // board[7][1].gameEl = OBJECTS.satelliteSpace
+    board[0][size - 1].gameEl = gameEls.moon
+    board[7][1].gameEl = gameEls.satellite
     return board
 }
-
 function renderBoard() {
     const { board, gameEls } = GAME
     const { elBoard } = GAME.domEls
@@ -101,17 +113,6 @@ function createCell(pos, gameEl = '') {
         gameEl
     }
 }
-
-function renderCell(pos) {
-    console.log('pos:', pos)
-    const { i, j } = pos
-    const { board } = GAME
-    const { elCells } = GAME.domEls
-    const curCell = elCells.find(elCell => +elCell.dataset.i === i && +elCell.dataset.j === j)
-    if (board[i][j].gameEl) curCell.innerHTML = board[i][j].gameEl
-    else curCell.innerText = ''
-}
-
 function updateCell(pos, gameEl = '') {
     const { i, j } = pos
     const { board } = GAME
@@ -120,14 +121,29 @@ function updateCell(pos, gameEl = '') {
     //  Dom
     renderCell(pos)
 }
-
-//*                                                                 Score
-function renderScore(diff) {
-    GAME.score += diff
-    const { elScore } = GAME.domEls
-    elScore.innerText = GAME.score
+function renderCell(pos) {
+    const { i, j } = pos
+    const { board } = GAME
+    const { elCells } = GAME.domEls
+    const curCell = elCells.find(elCell => +elCell.dataset.i === i && +elCell.dataset.j === j)
+    if (board[i][j].gameEl) curCell.innerHTML = board[i][j].gameEl
+    else curCell.innerText = ''
+}
+function blinkCell(pos, gameEl, timeout = 30) {
+    updateCell(pos, gameEl)
+    setTimeout(updateCell, timeout, pos)
 }
 
+function elementHit(pos) {
+    const { i, j } = pos
+    const { board, gameEls } = GAME
+    const cell = board[i][j]
+    cell.gameEl === gameEls.empty
+    blinkCell(pos, gameEls.explode, 780)
+    endShoot()
+}
+
+//*                                                                 Validation
 function isOnBoard(pos) {
     const { i, j } = pos
     const { board } = GAME
@@ -140,6 +156,13 @@ function isOnBoard(pos) {
     return true
 }
 
+//*                                                                 Score
+function renderScore(diff) {
+    GAME.score += diff
+    const { elScore } = GAME.domEls
+    elScore.innerText = GAME.score
+}
+
 function blowUpNeighbors(cellI, cellJ) {
     for (let i = cellI; i <= cellI + 1; i++) {
         if (i < 0 || i > mat.length) continue
@@ -149,26 +172,6 @@ function blowUpNeighbors(cellI, cellJ) {
         }
     }
 }
-
-// function createAliens(rowIdxStart, rowIdxEnd, colIdxStart, colIdxEnd) {
-//     let newAliens = []
-//     const { gameEls ,alienMap} = GAME
-//     const { alien } = gameEls
-//     for (let i = rowIdxStart; i <= rowIdxEnd; i++) {
-//         for (let j = colIdxStart; j <= colIdxEnd; j++) {
-//             newAliens.push({
-//                 gameEl: alien,
-//                 id: ALIENS.idx++,
-//                 isHit: false,
-//                 currPos: { i, j },
-//             })
-//             GAME.aliensCount++
-//         }
-//     }
-//     return newAliens
-// }
-
-
 
 function getLiveAliensPoss() {
     var liveAliensPoss = []
@@ -241,7 +244,7 @@ function moveAliens() {
 
     }
     console.log(`\tThey can Move!\nMoving Every life aliens(${liveAliensPoss.length})`)
-    cleanBoard(
+    cleanAlienCells(
         ALIENS.topRowIdx,
         ALIENS.bottomRowIdx,
         ALIENS.colIdxStart,
@@ -262,24 +265,28 @@ function moveAliens() {
 }
 
 function changeAliensDir() {
-    if (ALIENS.dirPos.i === 0 && 1 === ALIENS.dirPos.j || // → Right
-        ALIENS.dirPos.i === -1 && 0 === ALIENS.dirPos.j) { // ← Left
-        ALIENS.dirPos = { i: 1, j: 1 } // ↓ Down
+    const {dirPos} = GAME.alienMap
+    if (dirPos.i === 0 && 1 === dirPos.j || // → Right
+        dirPos.i === -1 && 0 === dirPos.j) { // ← Left
+        // ↓ Set Down
+        dirPos.i = 1
+        dirPos.j = 1
     }
-    else if (ALIENS.dirPos.i === 1 && 1 === ALIENS.dirPos.j) { // ↓ Down
+    else if (dirPos.i === 1 && 1 === dirPos.j) { // Already Down
         var aliensEdges = getAliensEdges(getLiveAliensPoss())[0]
-        if (aliensEdges.j === gBoard[0].length - 1) ALIENS.dirPos = { i: 1, j: 1 } // ← Left
-        elseALIENS.dirPos = { i: 1, j: 1 } // → Right
+        if (aliensEdges.j === gBoard[0].length - 1) dirPos = { i: 1, j: 1 } // ← Left
+        else dirPos = { i: 1, j: 1 } // → Right
     }
     // if (ALIENS.dirPos.i === -1 && -1 === ALIENS.dirPos.j) { // Up }
     return
 }
 
-function cleanBoard(rowIdxStart, rowIdxEnd, colIdxStart, colIdxEnd) {
+function cleanAlienCells(rowIdxStart, rowIdxEnd, colIdxStart, colIdxEnd) {
+    const {board} = GAME
     console.log(`cleanBoard(${rowIdxStart}, ${rowIdxEnd}, ${colIdxStart}, ${colIdxEnd})`);
-    for (var i = rowIdxStart; i <= rowIdxEnd; i++) {
-        for (var j = colIdxStart; j <= colIdxEnd; j++) {
-            gBoard[i][j] = createCell({ i, j })
+    for (let i = rowIdxStart; i <= rowIdxEnd; i++) {
+        for (let j = colIdxStart; j <= colIdxEnd; j++) {
+            board[i][j] = createCell({ i, j })
         }
     }
     renderBoard()

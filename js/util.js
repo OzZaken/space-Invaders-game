@@ -2,12 +2,26 @@
 
 // Audio
 function playAudio(audioKey) {
-    const { audio } = GAME.audio
-    const audioEco = audio[audioKey]
+    const { audio } = GAME
+    let audioEco = audio[audioKey]
     if (audioEco) audioEco.pause()
-    new Audio(`assets/audio/${audioKey}.mp3`).play()
+    return new Promise((resolve, reject) => {     // return a promise
+        let newAudio = new Audio()                           // create audio wo/ src
+        newAudio.preload = "auto"                            // intend to play through
+        newAudio.autoplay = true                             // autoplay when loaded
+        if (/music/.test(audioKey)) {
+            newAudio.loop = true
+            newAudio.volume = 0.4
+        }
+        newAudio.src = `assets/audio/${audioKey}.mp3`
+        newAudio.onerror = reject                            // on error, reject
+        newAudio.onended = resolve                           // when done, resolve
+    })
 }
-
+function onStopMusic() {
+    const { audio } = GAME
+    console.log(audio['music'])
+}
 function toggleMusic() {
     const elMusic = document.querySelector('.music')
     if (elMusic.isOn) elMusic.classList.toggle("paused")
@@ -23,4 +37,13 @@ function toggleMusic() {
 
 function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+function makeId(length = 5) {
+    var txt = ''
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    for (var i = 0; i < length; i++) {
+        txt += possible.charAt(Math.floor(Math.random() * possible.length))
+    }
+    return txt
 }

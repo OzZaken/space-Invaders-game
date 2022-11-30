@@ -49,7 +49,6 @@ function onHeroEvent() {
 
 function moveHero(pos) {
     if (!isOnBoard(pos)) return
-    console.log('pos:', pos)
     const { i, j } = pos
     const { hero, gameEls, board } = GAME
     if (board[i][j].gameEl) return
@@ -68,16 +67,13 @@ function shoot(pos) {
     laser.interval = setInterval(() => {
         let laserPos = pos
         laserPos.i--
+        playAudio('laser')
         if (!isOnBoard(laserPos)) endShoot()
         const { i, j } = laserPos
         if (board[i][j].gameEl === gameEls.alien) alienHit(laserPos)
-        blinkCell(laserPos, gameEls.laser)
-    }, 300)
-}
-
-function blinkCell(pos, gameEl) {
-    updateCell(pos, gameEl)
-    setTimeout(updateCell, 150, pos)
+        else if (board[i][j].gameEl !== gameEls.alien && board[i][j].gameEl) elementHit(laserPos)
+        else blinkCell(laserPos, gameEls.laser)
+    }, 200)
 }
 
 function endShoot() {
@@ -89,49 +85,6 @@ function endShoot() {
     return
 }
 
-function alienHit(pos) {
-    const { i, j } = pos
-    const { board } = GAME
-    const { liveAliens } = GAME.alienMap
-    const { elCells } = GAME.domEls
-    const cell = board[i][j]
-    const curCell = elCells.find(elCell => +elCell.dataset.i === i && +elCell.dataset.j === j)
-    console.log('curCell:', curCell)
-    cell.isHit = true
-    console.log('cell:', cell)
-    const alien = liveAliens.findIndex(alien => {
-        alien.pos.i == i && alien.pos.j == j
-    })
-    liveAliens.forEach(alien => {
-        console.log('alien:', alien)
-    })
-    
-    endShoot()
-}
-
-
-function handleAlienHit1(pos) {
-    console.log(`handleAlienHit(${pos.i},${pos.j})`)
-    //Alien
-    gBoard[HERO.laser.pos.i][HERO.laser.pos.j].isHit = true
-    console.log('gBoard[HERO.laser.pos.i][HERO.laser.pos.j]:', gBoard[HERO.laser.pos.i][HERO.laser.pos.j])
-    console.log('ALIEN.aliens:', ALIENS.aliens)
-    console.log('gBoard:', gBoard)
-    //Dom
-    updateCell(pos, OBJECTS.explode)
-    playAudio(OBJECTS.explode, HERO.explodeAudio)
-    setTimeout(updateCell, 800, pos)
-    // GAME
-    GAME.aliensCount--
-    if (GAME.aliensCount === 0) {
-        GAME.isOn = false
-        document.querySelector('.modal').classList.remove('display-none')
-    }
-    renderScore(10)
-    // HERO
-    endShoot()
-    return
-}
 
 function heroLunchScrollEffect() {
     const { elHero, elSky, elEx } = GAME.domEls
