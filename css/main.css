@@ -14,16 +14,19 @@ body {
     color: whitesmoke;
     text-align: center;
     /* height: 100%; */
-    overflow-y: hidden;
+    /* overflow-y: hidden; */
     /* overflow-x: hidden; */
 }
 
 img {
     width: 100%;
 }
-td img {
-    max-height: 33px
+
+/**                                                          Helpers */
+.display-none {
+    display: none;
 }
+
 /**                                                          Board */
 table {
     border: 1px solid rgba(222, 222, 222, 0.222);
@@ -32,13 +35,87 @@ table {
     border-collapse: separate;
 }
 
+/**                                                          Cell */
+.cell {
+    width: 35px;
+    height: 35px;
+    transition: all .3s;
+}
+
+td img {
+    max-height: 33px
+}
+
 /**                                                          Heading */
 h1 {
     text-align: center;
     font-size: 5em;
     font-family: 'Times New Roman', Times, serif;
-    animation: fadeOutUp 3.4s;
+    /* animation: fadeOutUp 3.4s; */
 }
+
+.game-heading {
+    position: fixed;
+    top: 30%;
+    left: 0;
+}
+
+
+
+.hero {
+    max-width: 35px;
+    margin: auto;
+}
+
+td div {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.floor {
+    background-color: rgba(255, 0, 0, 0.418);
+}
+
+/* @import "css/alien.css"; */
+/* @import "bg.css"; */
+#particles-js {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -2;
+}
+
+.emoji {
+    min-width: 1.4em;
+    margin: 0.3em 0.4em;
+    text-align: center;
+}
+.emoji::after {
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+
+.moon::after {
+    content: '🌕';
+    animation-name: moon;
+    animation-duration: 5s;
+}
+.earth::after {
+    content: '🌎';
+    --emoji-1: '🌍';
+    --emoji-2: '🌏';
+    animation-name: threeFrames;
+    animation-duration: 1.5s;
+}
+
+.fadeOutUp {
+    animation-name: fadeOutUp;
+}
+
 
 @keyframes fadeOutUp {
     from {
@@ -53,40 +130,6 @@ h1 {
     }
 }
 
-/* .fadeOutUp {animation-name: fadeOutUp;} */
-
-.cell {
-    width: 35px;
-    height: 35px;
-    transition: all .3s;
-}
-.game-heading{
-    position: fixed;
-    top: 30%;
-    left: 0;
-}
-
-.display-none {display: none;}
-
-.hero {
-    max-width: 35px;
-    margin: auto;
-}
-
-.emoji {
-    min-width: 1.4em;
-    margin: 0.3em 0.4em;
-    text-align: center; 
-}
-.emoji::after {
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-}
-.moon::after {
-    content: '🌕';
-    animation-name: moon;
-    animation-duration: 5s;
-}
 @keyframes moon {
     12.5% {
         content: '🌖';
@@ -117,13 +160,6 @@ h1 {
     }
 }
 
-.earth::after {
-    content: '🌎';
-    --emoji-1: '🌍';
-    --emoji-2: '🌏';
-    animation-name: threeFrames;
-    animation-duration: 1.5s;
-}
 @keyframes threeFrames {
     33.333% {
         content: var(--emoji-1);
@@ -133,31 +169,3 @@ h1 {
         content: var(--emoji-2);
     }
 }
-
-#bg-space {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
-}
-
-#particles-js {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: -2;
-}
-td div{
-    display: flex;
-    width: 100%;
-    height: 100%;
-}
-.floor{
-    background-color: rgba(255, 0, 0, 0.418);
-}
-/* @import "css/alien.css"; */
-/* @import "bg.css"; */

@@ -68,8 +68,13 @@ function shoot(pos) {
         let laserPos = pos
         laserPos.i--
         playAudio('laser')
-        if (!isOnBoard(laserPos)) endShoot()
         const { i, j } = laserPos
+        if (!isOnBoard(pos)) {
+            endShoot()
+            return
+        }
+        console.log('laserPos:', laserPos)
+        console.log('i:', i)
         if (board[i][j].gameEl === gameEls.alien) alienHit(laserPos)
         else if (board[i][j].gameEl !== gameEls.alien && board[i][j].gameEl) elementHit(laserPos)
         else blinkCell(laserPos, gameEls.laser)
@@ -82,7 +87,6 @@ function endShoot() {
     hero.isShoot = false
     clearInterval(laser.interval)
     laser.interval = null
-    return
 }
 
 

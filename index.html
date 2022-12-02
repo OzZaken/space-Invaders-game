@@ -10,7 +10,6 @@
 </head>
 
 <body onload="initGame()" onkeydown="onHeroEvent(event)">
-    <button onclick="onStopMusic()">Stop Music</button>
     <!-- <h1 class="heading">Space Invaders</h1> -->
     <table>
         <tbody class="board">
@@ -18,19 +17,25 @@
                 <th>score:
                 <td class="score"></td>
                 </th>
+                <th>life:
+                <td class="life"></td>
+                </th>
+                <button onclick="onStopMusic()">Stop Music</button>
+                <button onclick="onFreezeAliens()">Freeze Aliens</button>
             </thead>
         </tbody>
     </table>
 
-
     <div id="particles-js"></div>
+
     <script src="assets/lib/particles.min.js"></script>
     <script src="js/bg.js"></script>
 
     <script src="js/util.js"></script>
     <script src="js/hero.js"></script>
     <script src="js/alien.js"></script>
-    <script src="js/game.js"></script>
+
+    <script src="js/main.js"></script>
 </body>
 
 </html>
