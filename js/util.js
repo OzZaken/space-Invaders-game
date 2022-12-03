@@ -5,10 +5,10 @@ function playAudio(audioKey) {
     const { audio } = GAME
     let audioEco = audio[audioKey]
     if (audioEco) audioEco.pause()
-    return new Promise((resolve, reject) => {     // return a promise
-        let newAudio = new Audio()                           // create audio wo/ src
-        newAudio.preload = "auto"                            // intend to play through
-        newAudio.autoplay = true                             // autoplay when loaded
+    return new Promise((resolve, reject) => { // return a promise
+        let newAudio = new Audio()            // create audio wo/ src
+        newAudio.preload = "auto"             // intend to play through
+        newAudio.autoplay = true              // autoplay when loaded
         if (/music/.test(audioKey)) {
             newAudio.loop = true
             newAudio.volume = 0.4
@@ -38,7 +38,14 @@ function toggleMusic() {
 function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
-
+function _getRandomColor() {
+    let colorLetters = '0123456789ABCDEF'
+    let color = '#'
+    for (let i = 0; i < 6; i++) {
+        color += colorLetters[Math.floor(Math.random() * 16)]
+    }
+    return color
+}
 function makeId(length = 5) {
     var txt = ''
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'

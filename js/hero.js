@@ -1,19 +1,19 @@
 'use strict'
 //*                                                                HERO
 function initHero() {
-    const { hero, gameEls } = GAME
+    const { gameEls } = GAME
     const { board } = GAME
-    hero.pos = { i: 12, j: 5 }
-    board[12][5].gameEl = gameEls.hero
-    hero.isShoot = false
-    hero.laserAudio = null
-    hero.explodeAudio = null
-    hero.laser = {
-        pos: {}, // {}
-        interval: null,
-        speedInterval: 300,
-        travelCells: [], // []
+    GAME.hero = {
+        pos: { i: 12, j: 5 },
+        isShoot: false,
+        laser: {
+            pos: {},
+            interval: null,
+            speedInterval: 300,
+            travelCells: [],
+        },
     }
+    board[12][5].gameEl = gameEls.hero
 }
 
 function onHeroEvent() {
@@ -35,7 +35,9 @@ function onHeroEvent() {
             break
         case ' ':
             if (hero.isShoot) return
-            shoot({ i: i - 1, j })
+            hero.isShoot = true
+            shoot({ i: i - 1, j },hero.laser)
+            playAudio('laser')
             break
         case 'p':
             console.log('pause')
@@ -60,24 +62,21 @@ function moveHero(pos) {
     updateCell(hero.pos, gameEls.hero)
 }
 
-function shoot(pos) {
-    const { hero, board, gameEls } = GAME
-    const { laser } = hero
-    hero.isShoot = true
-    laser.interval = setInterval(() => {
-        let laserPos = pos
+function shoot(pos,shootType) {
+    const { board, gameEls } = GAME
+    shootType['interval'] = setInterval(() => {
+        shootType['pos'] = pos
         laserPos.i--
-        playAudio('laser')
         const { i, j } = laserPos
+
         if (!isOnBoard(pos)) {
             endShoot()
             return
         }
-        console.log('laserPos:', laserPos)
-        console.log('i:', i)
+
         if (board[i][j].gameEl === gameEls.alien) alienHit(laserPos)
         else if (board[i][j].gameEl !== gameEls.alien && board[i][j].gameEl) elementHit(laserPos)
-        else blinkCell(laserPos, gameEls.laser)
+        else blinkCell(shootType['pos'], shootType['gameEl'])
     }, 200)
 }
 
