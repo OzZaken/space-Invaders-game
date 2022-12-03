@@ -43,20 +43,21 @@ function placeAliens() {
 }
 
 function alienHit(pos) {
+    endShoot()
+
     const { i, j } = pos
     const { board, gameEls } = GAME
-    const { liveAliens, deadAliens } = GAME.alien
     const cell = board[i][j]
     cell.isHit = true
-    endShoot()
-    blinkCell(pos, gameEls.explode, 780)
-    playAudio('explode')
+
+    const { liveAliens, deadAliens } = GAME.alien
     const alienIdx = liveAliens.findIndex(alien => alien.isHit)
     deadAliens.push(liveAliens.splice(alienIdx, 1))
+    if (!liveAliens.length) console.log('win:', liveAliens)
+
     setScore(10)
-    if (!liveAliens.length) {
-        console.log('win:', liveAliens)
-    }
+    playAudio('explode')
+    blinkCell(pos, gameEls.explode, 780)
 }
 
 
@@ -76,7 +77,8 @@ function moveAliensInterval() {
 
 function setAlienDir() {
     const { board, alien } = GAME
-    const { dirPos, bottomRowIdx, colIdxStart, colIdxEnd } = alien
+    const { dirPos } = GAME.alien
+    const { bottomRowIdx, colIdxStart, colIdxEnd } = alien.posMap
 
     // If Already moving down force Choose other Direction
     const { i, j } = dirPos
@@ -197,12 +199,9 @@ function getEdgePos(EdgeNum, dirStr, edgeStr) {
 }
 
 function cleanAlienCells(topRowIdx, bottomRowIdx, colIdxStart, colIdxEnd) {
-    const { board } = GAME
     for (let i = topRowIdx; i <= bottomRowIdx; i++) {
         for (let j = colIdxStart; j <= colIdxEnd; j++) {
-            // console.log(`Clean Cell ${i}-${j}`);
-            board[i][j] = { pos: { i, j } }
-            renderCell({ i, j })
+            updateCell({ i, j })
         }
     }
 }

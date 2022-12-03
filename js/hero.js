@@ -7,9 +7,15 @@ function initHero() {
         pos: { i: 12, j: 5 },
         isShoot: false,
         laser: {
-            pos: {},
+            pos: null,
             interval: null,
-            speedInterval: 300,
+            speed: 300,
+            travelCells: [],
+        },
+        rocket: {
+            pos: null,
+            interval: null,
+            speed: 600,
             travelCells: [],
         },
     }
@@ -20,6 +26,7 @@ function onHeroEvent() {
     // if (!GAME.isOn) return
     const { hero } = GAME
     const { i, j } = hero.pos
+    console.log('event.key:', event.key)
     switch (event.key) {
         case 'ArrowUp':
             moveHero({ i: +i - 1, j: +j })
@@ -36,8 +43,14 @@ function onHeroEvent() {
         case ' ':
             if (hero.isShoot) return
             hero.isShoot = true
-            shoot({ i: i - 1, j },hero.laser)
+            shoot({ i: i - 1, j }, hero.laser)
             playAudio('laser')
+            break
+        case 'Enter':
+            if (hero.isShoot) return
+            hero.isShoot = true
+            shoot({ i: i - 1, j }, hero.rocket)
+            playAudio('rocket')
             break
         case 'p':
             console.log('pause')
@@ -62,22 +75,23 @@ function moveHero(pos) {
     updateCell(hero.pos, gameEls.hero)
 }
 
-function shoot(pos,shootType) {
-    const { board, gameEls } = GAME
+function shoot(pos, shootType) {
+    if (!isOnBoard(pos)) {
+        endShoot()
+        return
+    }
+
     shootType['interval'] = setInterval(() => {
-        shootType['pos'] = pos
-        laserPos.i--
-        const { i, j } = laserPos
 
-        if (!isOnBoard(pos)) {
-            endShoot()
-            return
-        }
+        shootType['pos'] = !shootType['pos'] ? pos : shootType['pos']
+        const { i, j } = shootType['pos']
+        shootType['pos'][i]--
+        const { board, gameEls } = GAME
 
-        if (board[i][j].gameEl === gameEls.alien) alienHit(laserPos)
-        else if (board[i][j].gameEl !== gameEls.alien && board[i][j].gameEl) elementHit(laserPos)
+        if (board[i][j].gameEl === gameEls.alien) alienHit(shootType['pos'])
+        else if (board[i][j].gameEl) elementHit(shootType['pos'])
         else blinkCell(shootType['pos'], shootType['gameEl'])
-    }, 200)
+    }, shootType['speed'])
 }
 
 function endShoot() {

@@ -98,11 +98,11 @@ function renderBoard() {
 }
 
 //*                                                                  Cell
-function updateCell(pos, gameEl = '') {
+function updateCell(pos, gameObj) {
     const { i, j } = pos
     const { board } = GAME
     // Model
-    board[i][j].gameEl = gameEl
+    board[i][j] = gameObj
     //  Dom
     renderCell(pos)
 }
@@ -111,9 +111,9 @@ function renderCell(pos) {
     const { i, j } = pos
     // find relevant By +'[NodeList].dataset'
     const { elCells } = GAME.domEls
-    const elCell = elCells.find(curElCell =>
-        +curElCell.dataset.i === i && +curElCell.dataset.j === j
-    )
+    const elCell = elCells.find(curElCell => {
+        return +curElCell.dataset.i === i && +curElCell.dataset.j === j
+    })
 
     const { board } = GAME
     const cell = board[i][j]
@@ -139,10 +139,10 @@ function isOnBoard(pos) {
     const { i, j } = pos
     const { board } = GAME
     if (
-        i < 0 || // Up
-        j < 0 || // Left
-        j > board[0].length - 1 || // Right
-        i > board.length - 1 // Down
+        i < 0 || // topRowIdx
+        j < 0 || // colIdxStart
+        j > board[0].length - 1 || // colIdxEnd
+        i > board.length - 1 // BottomRowIdx
 
     ) return false
     return true
