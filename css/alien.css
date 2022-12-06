@@ -1,4 +1,5 @@
 .space-invader {
+    box-sizing: unset;
     border: 2px solid #fff;
     background: transparent;
     background-color: #fff;
@@ -7,10 +8,6 @@
     height: 0.10em;
     margin-left: 1em;
 }
-
-
-
-
 
 .space-invader-1 {
     box-shadow:
@@ -34,25 +31,26 @@
         1em .25em 0 0 #fff,
         -.75em .75em 0 0 #fff,
         .75em .75em 0 0 #fff,
-       
+
         /* Left Arm */
         1.25em .25em 0 0 #fff,
         1.25em .5em 0 0 #fff,
         1.25em .75em 0 0 #fff,
-       
+
         /* Right Arm */
         -1.25em .25em 0 0 #fff,
         -1.25em .5em 0 0 #fff,
         -1.25em .75em 0 0 #fff,
-       
+
         /* Left Foot */
         -.25em 1em 0 0 #fff,
         -.5em 1em 0 0 #fff,
-        
+
         /* Right Foot */
         .25em 1em 0 0 #fff,
         .5em 1em 0 0 #fff;
 }
+
 .space-invader-2 {
     box-shadow:
         /* Body */
@@ -89,6 +87,7 @@
         1.0625em 1em 0 0 #fff,
         1.25em 1em 0 0 #fff;
 }
+
 .space-invader-3 {
     box-shadow:
         /* Body */
@@ -127,6 +126,7 @@
         0 -.25em 0 .25em #fff,
         0 -.625em 0 0 #fff;
 }
+
 .space-invader-ufo {
     box-shadow:
         /* Body */
@@ -160,18 +160,28 @@
         -1.125em .75em 0 0 #fff;
 }
 
-.space-invader.animate {animation: 1s infinite;}
+.space-invader.animate {
+    animation: 1s infinite;
+}
 
-.space-invader.classic {animation: 1s step-end infinite;}
+.space-invader.classic {
+    animation: 1s step-end infinite;
+}
 
 .space-invader-1.animate,
-.space-invader-1.classic {animation-name: space-invader-1;}
+.space-invader-1.classic {
+    animation-name: space-invader-1;
+}
 
 .space-invader-2.animate,
-.space-invader-2.classic {animation-name: space-invader-2;}
+.space-invader-2.classic {
+    animation-name: space-invader-2;
+}
 
 .space-invader-3.animate,
-.space-invader-3.classic {animation-name: space-invader-3;}
+.space-invader-3.classic {
+    animation-name: space-invader-3;
+}
 
 @keyframes space-invader-1 {
     50% {

@@ -1,44 +1,42 @@
 'use strict'
-//*                                                                HERO
-function initHero() {
-    const { gameEls } = GAME
-    const { board } = GAME
+
+function initHero(posI, posJ) {
     GAME.hero = {
-        pos: { i: 12, j: 5 },
+        pos: { i: posI, j: posJ },
         isShoot: false,
+        gameEl: '<div class="hero" role="img"><img src="assets/img/hero.svg" alt="spaceShip"><div/>',
         laser: {
             pos: null,
             interval: null,
-            speed: 300,
-            travelCells: [],
+            speed: 250,
+            gameEl: '<div class="laser" role="img"><img src="assets/img/laser.png" alt="Laser Shoot"><div/>',
         },
         rocket: {
             pos: null,
             interval: null,
-            speed: 600,
-            travelCells: [],
+            speed: 1000,
         },
     }
-    board[12][5].gameEl = gameEls.hero
+    return GAME.hero
 }
 
 function onHeroEvent() {
     // if (!GAME.isOn) return
     const { hero } = GAME
     const { i, j } = hero.pos
-    console.log('event.key:', event.key)
     switch (event.key) {
         case 'ArrowUp':
-            moveHero({ i: +i - 1, j: +j })
+            if (hero.isShoot) return
+            moveObj({ i: +i - 1, j: +j }, hero)
             break
         case 'ArrowLeft':
-            moveHero({ i: i, j: j - 1 })
+            moveObj({ i: i, j: j - 1 }, hero)
             break
         case 'ArrowRight':
-            moveHero({ i: i, j: j + 1 })
+            moveObj({ i: i, j: j + 1 }, hero)
             break
         case 'ArrowDown':
-            moveHero({ i: i + 1, j: j })
+            moveObj({ i: i + 1, j: j }, hero)
             break
         case ' ':
             if (hero.isShoot) return
@@ -62,77 +60,63 @@ function onHeroEvent() {
     }
 }
 
-function moveHero(pos) {
-    if (!isOnBoard(pos)) return
-    const { i, j } = pos
-    const { hero, gameEls, board } = GAME
-    if (board[i][j].gameEl) return
-    // PrevCell
-    updateCell(hero.pos)
-    // NextCell
-    hero.pos.i = i
-    hero.pos.j = j
-    updateCell(hero.pos, gameEls.hero)
-}
-
 function shoot(pos, shootType) {
-    if (!isOnBoard(pos)) {
+
+    const { board } = GAME
+    const { i, j } = pos
+    if (board[i][j].gameEl) {
         endShoot()
         return
     }
 
-    shootType['interval'] = setInterval(() => {
+    const { hero } = GAME
+    shootType.pos = pos
+    // Closure Pitfall - only happen when creating functions within a loop || interval
+    const { speed } = shootType
+    // SOLUTION using a named function:
+    hero.shootInterval = setInterval(shootTravel, speed, shootType)
+}
 
-        shootType['pos'] = !shootType['pos'] ? pos : shootType['pos']
-        const { i, j } = shootType['pos']
-        shootType['pos'][i]--
-        const { board, gameEls } = GAME
+function shootTravel(shootType) {
+    const { pos, speed } = shootType
+    const { i, j } = pos
+    const { alien, board } = GAME
 
-        if (board[i][j].gameEl === gameEls.alien) alienHit(shootType['pos'])
-        else if (board[i][j].gameEl) elementHit(shootType['pos'])
-        else blinkCell(shootType['pos'], shootType['gameEl'])
-    }, shootType['speed'])
+    if (!isOnBoard(pos)) {
+        console.log('!isOnBoard(shootType.pos)):', !isOnBoard(pos))
+        endShoot()
+        return
+    }
+
+    else if (board[i][j].gameEl === alien.gameEl) {
+        alienHit(pos, shootType)
+        endShoot()
+        return
+    }
+
+    else if (board[i][j].gameEl) {
+        elementHit(pos, shootType)
+        endShoot()
+        return
+    }
+
+    if (!board[i][j].gameEl) {
+        pos.i--
+        blinkCell(pos, shootType, speed / 4)
+    }
+}
+function elementHit(pos) {
+    const { i, j } = pos
+    const { board, gameEls } = GAME
+    const cell = board[i][j]
+    cell = { pos: i, j }
+    blinkCell(pos, gameEls.explode, 780)
 }
 
 function endShoot() {
     const { hero } = GAME
-    const { laser } = hero
     hero.isShoot = false
-    clearInterval(laser.interval)
-    laser.interval = null
-}
-
-
-function heroLunchScrollEffect() {
-    const { elHero, elSky, elEx } = GAME.domEls
-    const { scroller } = GAME
-
-    let windowHeight = window.innerHeight
-    let scrollerY = document.documentElement.scrollTop
-    let docOffSetY = document.body.offsetHeight - 250
-    let perc = scrollerY / (docOffSetY - windowHeight)
-
-    // Bottom 
-    if (perc < 1) elSky.style.bottom = -1 * (perc) * 100 + '%'
-    // Set hero engine 
-    if (perc > 0) {
-        elHero.classList.add('shake_hero')
-        elEx.classList.add('exhaust')
-    } else {
-        elHero.classList.remove('shake_hero')
-        elEx.classList.remove('exhaust')
-    }
-    // Remove hero engine 
-    if (perc > .37) elEx.classList.remove('exhaust')
-
-    // Remove hero engine 
-    if (perc > .25) scroller.bottom = (perc - .25) * 133
-
-    if (perc > 0) {
-        scroller.bottom = (perc - .25) * 133
-        if (perc - .25 < 0) scroller.bottom = 0
-    }
-    elHero.style.bottom = scroller.bottom + '%'
-    scroller.lastY = scrollerY
-
+    clearInterval(hero.shootInterval)
+    hero.shootInterval = null
+    return
 }
