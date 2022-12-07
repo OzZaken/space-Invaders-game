@@ -4,15 +4,15 @@ function initHero(posI, posJ) {
     GAME.hero = {
         pos: { i: posI, j: posJ },
         isShoot: false,
-        gameEl: '<div class="hero" role="img"><img src="assets/img/hero.svg" alt="spaceShip"><div/>',
+        domEl: '<div class="hero" role="img"><img src="assets/img/hero.svg" alt="spaceShip"><div/>',
         laser: {
-            pos: null,
+            pos: {},
             interval: null,
             speed: 250,
-            gameEl: '<div class="laser" role="img"><img src="assets/img/laser.png" alt="Laser Shoot"><div/>',
+            domEl: '<div class="laser" role="img"><img src="assets/img/laser.png" alt="Laser Shoot"><div/>',
         },
         rocket: {
-            pos: null,
+            pos: {},
             interval: null,
             speed: 1000,
         },
@@ -21,102 +21,118 @@ function initHero(posI, posJ) {
 }
 
 function onHeroEvent() {
-    // if (!GAME.isOn) return
+    if (!GAME.isOn) return
     const { hero } = GAME
     const { i, j } = hero.pos
+
     switch (event.key) {
         case 'ArrowUp':
             if (hero.isShoot) return
-            moveObj({ i: +i - 1, j: +j }, hero)
+            moveObj(i - 1, j, hero)
             break
         case 'ArrowLeft':
-            moveObj({ i: i, j: j - 1 }, hero)
+            moveObj(i, j - 1, hero)
             break
         case 'ArrowRight':
-            moveObj({ i: i, j: j + 1 }, hero)
+            moveObj(i, j + 1, hero)
             break
         case 'ArrowDown':
-            moveObj({ i: i + 1, j: j }, hero)
+            moveObj(i + 1, j, hero)
             break
         case ' ':
             if (hero.isShoot) return
-            hero.isShoot = true
-            shoot({ i: i - 1, j }, hero.laser)
+            shoot(i - 1, j, hero.laser)
             playAudio('laser')
             break
         case 'Enter':
             if (hero.isShoot) return
-            hero.isShoot = true
-            shoot({ i: i - 1, j }, hero.rocket)
+            shoot(i - 1, j, hero.rocket)
             playAudio('rocket')
             break
         case 'p':
             console.log('pause')
             toggleAliensInt()
-            endShoot()
+            onPause()
             break
         default:
             return
     }
 }
 
-function shoot(pos, shootType) {
+function shoot(i, j, shootType) {
+    const { board, hero } = GAME
+    hero.isShoot = true
 
-    const { board } = GAME
-    const { i, j } = pos
-    if (board[i][j].gameEl) {
-        endShoot()
+    const { speed ,pos} = shootType
+
+    if (board[i][j].domEl) {
+        endShoot(shootType.interval)
         return
     }
 
-    const { hero } = GAME
-    shootType.pos = pos
+    pos.i = i
+    pos.j = j
+
     // Closure Pitfall - only happen when creating functions within a loop || interval
-    const { speed } = shootType
-    // SOLUTION using a named function:
-    hero.shootInterval = setInterval(shootTravel, speed, shootType)
+    shootType.interval = setInterval(shootInterval, speed, shootType)
 }
 
-function shootTravel(shootType) {
+// Closure Pitfall SOLUTION using a named function:
+function shootInterval(shootType) {
     const { pos, speed } = shootType
+
     const { i, j } = pos
+    blinkCell(i, j, shootType.domEl, speed / 5)
+
+    if (!isOnBoard(i, j )) {
+        endShoot(shootType.interval)
+        return
+    }
+
     const { alien, board } = GAME
-
-    if (!isOnBoard(pos)) {
-        console.log('!isOnBoard(shootType.pos)):', !isOnBoard(pos))
-        endShoot()
+    if (board[i][j].domEl) {
+        if (board[i][j].domEl === alien.domEl) alienHit(i, j, shootType)
+        else blinkCell(i, j, domEls.explode, 780)
+        endShoot(shootType)
         return
     }
-
-    else if (board[i][j].gameEl === alien.gameEl) {
-        alienHit(pos, shootType)
-        endShoot()
-        return
-    }
-
-    else if (board[i][j].gameEl) {
-        elementHit(pos, shootType)
-        endShoot()
-        return
-    }
-
-    if (!board[i][j].gameEl) {
-        pos.i--
-        blinkCell(pos, shootType, speed / 4)
-    }
-}
-function elementHit(pos) {
-    const { i, j } = pos
-    const { board, gameEls } = GAME
-    const cell = board[i][j]
-    cell = { pos: i, j }
-    blinkCell(pos, gameEls.explode, 780)
+    else pos.i--
 }
 
-function endShoot() {
+function endShoot(shootType) {
     const { hero } = GAME
     hero.isShoot = false
-    clearInterval(hero.shootInterval)
-    hero.shootInterval = null
-    return
+    shootType.pos = {}
+    clearInterval(shootType.interval)
+    shootType.interval = null
+}
+
+function blinkCell(i, j, domEl, timeout = 30) {
+    // Change only Dom 
+    renderCell(i, j, domEl)
+    // Update based model
+    setTimeout(renderCell, timeout, i, j)
+}
+
+// Model & Dom
+function updateCell(i, j, gameObj) {
+    console.log(`updateCell(${i}, ${j}, ${gameObj})`);
+    // if (!isOnBoard(i, j)) return
+    const { board } = GAME
+    const newCell = gameObj ? { ...gameObj, pos: { i, j } } : { pos: { i, j } }
+
+    board[i][j] = newCell
+    renderCell(i, j)
+}
+
+// Dom By Model || optional value 
+function renderCell(i, j, val) {
+    const { board } = GAME
+    const cell = board[i][j]
+
+    const { elCellMap } = GAME.domEls
+    const elCell = elCellMap[i][j]
+
+    if (!val) elCell.innerHTML = cell.domEl || ''
+    else elCell.innerHTML = val
 }

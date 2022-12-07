@@ -1,15 +1,5 @@
-.space-invader {
-    box-sizing: unset;
-    border: 2px solid #fff;
-    background: transparent;
-    background-color: #fff;
-    /* position: relative; */
-    width: 0.10em;
-    height: 0.10em;
-    margin-left: 1em;
-}
 
-.space-invader-1 {
+.alien-1 {
     box-shadow:
         0 0 0 .25em #fff,
         0 .25em 0 .25em #fff,
@@ -51,7 +41,7 @@
         .5em 1em 0 0 #fff;
 }
 
-.space-invader-2 {
+.alien-2 {
     box-shadow:
         /* Body */
         -.125em -.5em 0 .25em #fff,
@@ -88,7 +78,7 @@
         1.25em 1em 0 0 #fff;
 }
 
-.space-invader-3 {
+.alien-3 {
     box-shadow:
         /* Body */
         0 -.625em 0 .125em #fff,
@@ -127,7 +117,7 @@
         0 -.625em 0 0 #fff;
 }
 
-.space-invader-ufo {
+.alien-ufo {
     box-shadow:
         /* Body */
         -.25em -.625em 0 .125em #fff,
@@ -160,30 +150,30 @@
         -1.125em .75em 0 0 #fff;
 }
 
-.space-invader.animate {
+.alien.animate {
     animation: 1s infinite;
 }
 
-.space-invader.classic {
+.alien.classic {
     animation: 1s step-end infinite;
 }
 
-.space-invader-1.animate,
-.space-invader-1.classic {
-    animation-name: space-invader-1;
+.alien-1.animate,
+.alien-1.classic {
+    animation-name: alien-1;
 }
 
-.space-invader-2.animate,
-.space-invader-2.classic {
-    animation-name: space-invader-2;
+.alien-2.animate,
+.alien-2.classic {
+    animation-name: alien-2;
 }
 
-.space-invader-3.animate,
-.space-invader-3.classic {
-    animation-name: space-invader-3;
+.alien-3.animate,
+.alien-3.classic {
+    animation-name: alien-3;
 }
 
-@keyframes space-invader-1 {
+@keyframes alien-1 {
     50% {
         box-shadow:
             0 0 0 .25em #fff,
@@ -223,7 +213,7 @@
     }
 }
 
-@keyframes space-invader-2 {
+@keyframes alien-2 {
     50% {
         box-shadow:
             /* Body */
@@ -262,7 +252,7 @@
     }
 }
 
-@keyframes space-invader-3 {
+@keyframes alien-3 {
     50% {
         box-shadow:
             /* Body */
@@ -290,4 +280,15 @@
             .875em 1em 0 0 #fff,
             .375em 1em 0 0 #fff;
     }
+}
+
+.alien {
+    box-sizing: unset;
+    border: 2px solid #fff;
+    background: transparent;
+    background-color: #fff;
+    /* position: relative; */
+    width: 0.10em;
+    height: 0.10em;
+    margin-left: 1em;
 }
