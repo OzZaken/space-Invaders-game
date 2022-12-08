@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 
-<body onload="initGame()" onkeydown="onHeroEvent(event)">
+<body onload="initGame()" onkeydown="onHandleEvent(event)">
     <!-- <h1 class="heading">Space Invaders</h1> -->
     <table>
         <tbody class="board">
@@ -17,11 +17,13 @@
                 <th>score:
                 <td class="score"></td>
                 </th>
+
                 <th>life:
                 <td class="life"></td>
                 </th>
+
                 <button  onclick="onStopMusic()">Stop Music</button>
-                <button class="alien-move" onclick="onToggleAliensInterval()">Move Aliens</button>
+                <button class="btn-toggle-game" onclick="onToggleGame()">Move Aliens</button>
             </thead>
         </tbody>
     </table>

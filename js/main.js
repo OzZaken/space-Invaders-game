@@ -9,7 +9,7 @@
 
 function initGame() {
     window.GAME = {
-        domEls: {
+        gameEls: {
             moon: '<div class="emoji moon" role="img"></div>',
             satellite: '<div class="satellite" role="img"><img src="assets/img/satellite.gif" alt="spaceShip"></div>',
             explode: '<div class="explode" role="img"><img src="assets/img/explode.gif" alt="Exploding"></div>',
@@ -21,7 +21,7 @@ function initGame() {
             elMusic: document.querySelector('.music'),
             elScore: document.querySelector('.score'),
             elLife: document.querySelector('.life'),
-            elMove: document.querySelector('.alien-move'),
+            elMove: document.querySelector('.btn-toggle-game'),
             elCellMap: {}
         },
         audio: {},
@@ -39,7 +39,6 @@ function initGame() {
     placeAliens()
 
     renderBoard()
-    console.log('🐞');
     GAME.domEls.elCells = [...document.querySelectorAll('.cell')]
     const { elCells, elCellMap } = GAME.domEls
     elCells.forEach(elCell => {
@@ -47,7 +46,7 @@ function initGame() {
         elCellMap[i][j] = elCell
     })
 
-    document.body.style.zoom = "95%";
+    document.body.style.zoom = "90%";
     startPlay()
 }
 
@@ -64,9 +63,9 @@ function startPlay() {
     console.log('GAME:', GAME)
 }
 
-//*                                                                  Board
+//Model  //*                                               Board
 function buildBoard(rowsCount, colsCount) {
-    const { domEls } = GAME
+    const { gameEls } = GAME
     const { elCellMap } = GAME.domEls
     let board = []
     for (let i = 0; i < rowsCount; i++) {
@@ -74,13 +73,14 @@ function buildBoard(rowsCount, colsCount) {
         elCellMap[i] = []
         for (let j = 0; j < colsCount; j++) {
             board[i][j] = { pos: { i, j } }
-            if (i === rowsCount - 1) board[i][j].domEl = domEls.floor
+            if (i === rowsCount - 1) board[i][j].gameEl = gameEls.floor
             elCellMap[i][j] = {}
         }
     }
     GAME.board = board
 }
 
+// Dom 
 function renderBoard() {
     const { board } = GAME
     const { elBoard } = GAME.domEls
@@ -91,25 +91,29 @@ function renderBoard() {
         for (let j = 0; j < board[0].length; j++) {
             const cell = board[i][j]
             // ${cell.color && setAlienColor(cell.color)}
-            strHTML += `\t<td class="cell [${i}]|[${j}]" data-i="${i}" data-j="${j}">${cell.domEl || ''}</td>`
+            strHTML += `\t<td class="cell [${i}]|[${j}]" data-i="${i}" data-j="${j}">${cell.gameEl || ''}</td>`
         }
         strHTML += '</tr>'
     }
     elBoard.innerHTML = strHTML
 }
 
-//*                                                                  Cell
+// Dom By Model || optional value //*                       Cell
+function renderCell(i, j, val) {
+    // console.log(`renderCell(${i}, ${j}, ${val})`);
+    const { board } = GAME
+    const cell = board[i][j]
 
-// Change only Dom && timeOut for update base model 
-function blinkCell(i, j, domEl, timeout = 30) {
-    renderCell(i, j, domEl)  
-    setTimeout(renderCell, timeout, i, j)  
+    const { elCellMap } = GAME.domEls
+    const elCell = elCellMap[i][j]
+
+    if (!val) elCell.innerHTML = cell.gameEl || ''
+    else elCell.innerHTML = val
 }
 
 // Model & Dom
 function updateCell(i, j, gameObj) {
-    console.log(`updateCell(${i}, ${j}, ${gameObj})`);
-    // if (!isOnBoard(i, j)) return
+    // console.log(`UT updateCell(${i}, ${j}, ${JSON.stringify(gameObj, null, 2)})`)
     const { board } = GAME
     const newCell = gameObj ? { ...gameObj, pos: { i, j } } : { pos: { i, j } }
 
@@ -117,22 +121,17 @@ function updateCell(i, j, gameObj) {
     renderCell(i, j)
 }
 
-// Dom By Model || optional value 
-function renderCell(i, j, val) {
-    const { board } = GAME
-    const cell = board[i][j]
-
-    const { elCellMap } = GAME.domEls
-    const elCell = elCellMap[i][j]
-
-    if (!val) elCell.innerHTML = cell.domEl || ''
-    else elCell.innerHTML = val
+// Set only Dom && timeOut render base model 
+function blinkCell(i, j, gameEl, timeout = 30) {
+    renderCell(i, j, gameEl)
+    setTimeout(renderCell, timeout, i, j)
 }
 
-function moveObj(i, j, gameObj) {
+// Update Cell X2
+function moveHero(i, j, gameObj) {
     if (!isOnBoard(i, j)) return
     const { board } = GAME
-    if (board[i][j].domEl) return
+    if (board[i][j].gameEl) return
 
     const { pos } = gameObj
     updateCell(pos.i, pos.j)
