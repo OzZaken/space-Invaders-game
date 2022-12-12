@@ -1,11 +1,11 @@
 'use strict'
+//*                                                               Initiation
 // ; (() => {
 //     window.GAME = {
 //         onInit,
 //         onHeroEvent
 //     }
 // })
-//*                                                               Initiation
 
 function initGame() {
     window.GAME = {
@@ -39,14 +39,13 @@ function initGame() {
     placeAliens()
 
     renderBoard()
-    GAME.domEls.elCells = [...document.querySelectorAll('.cell')]
+    const { elBoard } = GAME.domEls
+    GAME.domEls.elCells = [...elBoard.querySelectorAll('.cell')]
     const { elCells, elCellMap } = GAME.domEls
     elCells.forEach(elCell => {
         const { i, j } = elCell.dataset
         elCellMap[i][j] = elCell
     })
-
-    document.body.style.zoom = "90%";
     startPlay()
 }
 
@@ -107,10 +106,7 @@ function renderCell(i, j, val) {
     const { elCellMap } = GAME.domEls
     const elCell = elCellMap[i][j]
 
-    if (!val) {
-        const strHtml = cell.gameEl && !cell.isHit ? cell.gameEl : ''
-        elCell.innerHTML = strHtml
-    }
+    if (!val) elCell.innerHTML = cell.gameEl || ''
     else elCell.innerHTML = val
 }
 
@@ -162,15 +158,18 @@ function setScore(diff) {
     elScore.innerText = GAME.score
 }
 
+function onToggleGame() {
+    toggleAlienMove()
+}
+
 // Rocket
-function blowUpNeighbors(cellI, cellJ) {
+function blowUpNeigs(cellI, cellJ) {
     for (let i = cellI; i <= cellI + 1; i++) {
         if (i < 0 || i > mat.length) continue
         for (let j = cellJ - 1; j <= cellJ + 1; j++) {
             if (i === cellI && j === cellJ) continue
             if (j < 0 || j >= mat[i].length) continue
-
-
+            alienHit(i, j)
         }
     }
 }

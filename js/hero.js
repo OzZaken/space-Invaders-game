@@ -8,12 +8,16 @@ function initHero(posI, posJ) {
         gameEl: '<div class="hero" role="img"><img src="assets/img/hero.svg" alt="spaceShip"><div/>',
         laser: {
             pos: {},
-            speed: 250,
+            speed: 120,
             gameEl: '<div class="laser" role="img"><img src="assets/img/laser.png" alt="Laser Shoot"><div/>',
         },
         rocket: {
             pos: {},
-            speed: 1000,
+            speed: 500,
+            gameEl: '🚀',
+            isBlowNeigs: true,
+            isBlowNeigsActive: false,
+
         },
     }
     return GAME.hero
@@ -64,7 +68,6 @@ function shoot(i, j, shootType) {
     const { speed, pos } = shootType
 
     hero.isShoot = true
-
     if (board[i][j].gameEl) {
         endShoot()
         return
@@ -88,7 +91,7 @@ function shootInterval(shootType) {
     }
 
     blinkCell(i, j, shootType.gameEl, speed / 5)
-
+    // Handle Options
     const { alien, board } = GAME
     if (board[i][j].gameEl) {
         if (board[i][j].gameEl === alien.gameEl) alienHit(i, j, shootType)

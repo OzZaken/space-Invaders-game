@@ -28,7 +28,7 @@ function createAliens() {
             liveAliens.push({
                 pos: { i, j },
                 gameEl: alien.gameEl,
-                isHit: false,
+                // isHit: false,
                 // color: _getRandomColor(),
             })
         }
@@ -56,18 +56,15 @@ function placeAliens() {
     })
 }
 
-function alienHit(i, j) {
-    console.log('alienHit i,j:', i, j)
+function alienHit(i, j, shootType) {
     const { board, gameEls, alien } = GAME
     const { liveAliens, deadAliens } = alien
 
     const hitAlien = board[i][j]
-    hitAlien.isHit = true
+    // hitAlien.isHit = true
+    hitAlien.gameEl = null
 
-    const alienIdx = liveAliens.findIndex(alien => {
-        return alien.pos.i === i && alien.pos.j === j
-    })
-
+    const alienIdx = liveAliens.findIndex(alien => alien.pos.i === i && alien.pos.j === j)
     deadAliens.push(liveAliens.splice(alienIdx, 1))
 
     if (!liveAliens.length) console.log('win:', liveAliens, deadAliens)
@@ -75,6 +72,14 @@ function alienHit(i, j) {
     setScore(10)
     playAudio('explode')
     blinkCell(i, j, gameEls.explode, 780)
+
+    // Rocket
+    if (shootType.isBlowNeigs) {
+        console.log('shootType:', shootType)
+        if (shootType.isBlowNeigsActive) return
+        shootType.isBlowNeigsActive = true
+
+    }
 }
 
 function moveAliensInterval() {
@@ -85,19 +90,11 @@ function moveAliensInterval() {
 }
 
 function cleanAlienCells() {
-    // By LiveAliens
     const { liveAliens } = GAME.alien
     liveAliens.forEach(alien => {
         const { i, j } = alien.pos
         updateCell(i, j)
     })
-    // By posMap
-    // const { topRowIdx, bottomRowIdx, colIdxStart, colIdxEnd } = GAME.alien.posMap
-    // for (let i = topRowIdx; i <= bottomRowIdx; i++) {
-    //     for (let j = colIdxStart; j <= colIdxEnd; j++) {
-    //         updateCell(i, j)
-    //     }
-    // }
 }
 
 //  Set alien direction Position 
@@ -192,11 +189,10 @@ function getEdgePoss(edgeNum, posStr, edgeStr) {
     getEdgePoss(edgeNum, posStr, edgeStr)
 }
 
-
-function onToggleGame() {
+function toggleAlienMove() {
     const { alien, domEls } = GAME
     const { elMove } = domEls
-
+    // Alien Movement
     if (alien.isFreeze) {
         alien.moveInterval = setInterval(moveAliensInterval, 1000)
         elMove.innerText = 'Pause Aliens'
@@ -206,6 +202,5 @@ function onToggleGame() {
         alien.moveInterval = null
         elMove.innerText = 'Move Aliens'
     }
-
     alien.isFreeze = !alien.isFreeze
 }
