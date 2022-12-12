@@ -59,6 +59,24 @@ function onHandleEvent() {
     }
 }
 
+function shoot(i, j, shootType) {
+    const { board, hero } = GAME
+    const { speed, pos } = shootType
+
+    hero.isShoot = true
+
+    if (board[i][j].gameEl) {
+        endShoot()
+        return
+    }
+
+    pos.i = i
+    pos.j = j
+
+    // Closure Pitfall - only happen when creating functions within a loop || interval
+    hero.shootInterval = setInterval(shootInterval, speed, shootType)
+}
+
 // Closure Pitfall SOLUTION using a named function:
 function shootInterval(shootType) {
     const { pos, speed } = shootType
@@ -79,24 +97,6 @@ function shootInterval(shootType) {
         return
     }
     else pos.i--
-}
-
-function shoot(i, j, shootType) {
-    const { board, hero } = GAME
-    const { speed, pos } = shootType
-
-    hero.isShoot = true
-
-    if (board[i][j].gameEl) {
-        endShoot()
-        return
-    }
-
-    pos.i = i
-    pos.j = j
-
-    // Closure Pitfall - only happen when creating functions within a loop || interval
-    hero.shootInterval = setInterval(shootInterval, speed, shootType)
 }
 
 function endShoot() {

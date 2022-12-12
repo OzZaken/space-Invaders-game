@@ -107,7 +107,10 @@ function renderCell(i, j, val) {
     const { elCellMap } = GAME.domEls
     const elCell = elCellMap[i][j]
 
-    if (!val) elCell.innerHTML = cell.gameEl || ''
+    if (!val) {
+        const strHtml = cell.gameEl && !cell.isHit ? cell.gameEl : ''
+        elCell.innerHTML = strHtml
+    }
     else elCell.innerHTML = val
 }
 
@@ -115,9 +118,8 @@ function renderCell(i, j, val) {
 function updateCell(i, j, gameObj) {
     // console.log(`UT updateCell(${i}, ${j}, ${JSON.stringify(gameObj, null, 2)})`)
     const { board } = GAME
-    const newCell = gameObj ? { ...gameObj, pos: { i, j } } : { pos: { i, j } }
-
-    board[i][j] = newCell
+    const updateCell = gameObj ? { ...gameObj, pos: { i, j } } : { pos: { i, j } }
+    board[i][j] = updateCell
     renderCell(i, j)
 }
 

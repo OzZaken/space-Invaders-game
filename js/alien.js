@@ -57,32 +57,50 @@ function placeAliens() {
 }
 
 function alienHit(i, j) {
+    console.log('alienHit i,j:', i, j)
     const { board, gameEls, alien } = GAME
     const { liveAliens, deadAliens } = alien
 
     const hitAlien = board[i][j]
     hitAlien.isHit = true
-    const alienIdx = liveAliens.findIndex(alien => alien.isHit)
+
+    const alienIdx = liveAliens.findIndex(alien => {
+        return alien.pos.i === i && alien.pos.j === j
+    })
+
     deadAliens.push(liveAliens.splice(alienIdx, 1))
 
     if (!liveAliens.length) console.log('win:', liveAliens, deadAliens)
 
     setScore(10)
     playAudio('explode')
-    board[i][j] = { pos: { i, j } }
-    blinkCell(i, j, gameEls.explode)
+    blinkCell(i, j, gameEls.explode, 780)
 }
 
 function moveAliensInterval() {
     cleanAlienCells()
-
     setAlienDir()
-
     setAliensPos()
-
     placeAliens()
 }
 
+function cleanAlienCells() {
+    // By LiveAliens
+    const { liveAliens } = GAME.alien
+    liveAliens.forEach(alien => {
+        const { i, j } = alien.pos
+        updateCell(i, j)
+    })
+    // By posMap
+    // const { topRowIdx, bottomRowIdx, colIdxStart, colIdxEnd } = GAME.alien.posMap
+    // for (let i = topRowIdx; i <= bottomRowIdx; i++) {
+    //     for (let j = colIdxStart; j <= colIdxEnd; j++) {
+    //         updateCell(i, j)
+    //     }
+    // }
+}
+
+//  Set alien direction Position 
 function setAlienDir() {
     const { alien, boardMap } = GAME
     const { rowsCount, colsCount } = boardMap
@@ -91,7 +109,6 @@ function setAlienDir() {
     const { colIdxEnd, colIdxStart, bottomRowIdx } = posMap
 
     const { i, j } = dirPos
-
     if (i === 0 && j === 1) {
         if (colIdxEnd === colsCount - 1) {
             dirPos.i = 1
@@ -119,6 +136,7 @@ function setAlienDir() {
     }
 }
 
+// Check if all Next Poss of the edge (live aliens) is empty
 function isDirBlock(edgeDirStr) {
     const { board, alien } = GAME
     const { posMap } = alien
@@ -134,12 +152,14 @@ function isDirBlock(edgeDirStr) {
     })
 }
 
+//  Set alien Position according to alien dirPos
 function setAliensPos() {
-    const { liveAliens, dirPos, posMap } = GAME.alien
+    const { liveAliens, deadAliens, dirPos, posMap } = GAME.alien
     const { i, j } = dirPos
 
     // Update liveAliens pos
-    liveAliens.forEach(alien => {
+
+    liveAliens.concat(...deadAliens).forEach(alien => {
         alien.pos.i += i
         alien.pos.j += j
     })
@@ -154,17 +174,9 @@ function setAliensPos() {
 
 // Recursive Func to find only the live on the current edge
 function getEdgePoss(edgeNum, posStr, edgeStr) {
-    const { liveAliens, posMap } = GAME.alien
-    const { bottomRowIdx } = posMap
-
-    if (edgeNum < 0 || edgeNum > bottomRowIdx) {
-        console.log('Huston we have a problem 🐞')
-        return
-    }
+    const { liveAliens } = GAME.alien
     const edgeAliens = liveAliens.filter(alien => alien.pos[posStr] === edgeNum)
     console.log('edgeAliens:', edgeAliens)
-
-
     if (edgeAliens.length >= 1) {
         const edgePoss = []
         console.log('edgePoss.push(alien.pos):', edgeAliens.forEach(alien => edgePoss.push(alien.pos)))
@@ -180,19 +192,11 @@ function getEdgePoss(edgeNum, posStr, edgeStr) {
     getEdgePoss(edgeNum, posStr, edgeStr)
 }
 
-function cleanAlienCells() {
-    const { topRowIdx, bottomRowIdx, colIdxStart, colIdxEnd } = GAME.alien.posMap
-    for (let i = topRowIdx; i <= bottomRowIdx; i++) {
-        for (let j = colIdxStart; j <= colIdxEnd; j++) {
-            updateCell(i, j)
-        }
-    }
-}
 
-// UT...Later on Pause Game
 function onToggleGame() {
     const { alien, domEls } = GAME
     const { elMove } = domEls
+
     if (alien.isFreeze) {
         alien.moveInterval = setInterval(moveAliensInterval, 1000)
         elMove.innerText = 'Pause Aliens'
@@ -202,9 +206,6 @@ function onToggleGame() {
         alien.moveInterval = null
         elMove.innerText = 'Move Aliens'
     }
-    alien.isFreeze = !alien.isFreeze
-}
 
-function setAlienColor(color) {
-    // console.log('color:', color)
+    alien.isFreeze = !alien.isFreeze
 }
