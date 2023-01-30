@@ -1,11 +1,5 @@
 'use strict'
-//*                                                               Initiation
-// ; (() => {
-//     window.GAME = {
-//         onInit,
-//         onHeroEvent
-//     }
-// })
+
 
 function initGame() {
     window.GAME = {
@@ -62,7 +56,6 @@ function startPlay() {
     console.log('GAME:', GAME)
 }
 
-//Model  //*                                               Board
 function buildBoard(rowsCount, colsCount) {
     const { gameEls } = GAME
     const { elCellMap } = GAME.domEls
@@ -79,7 +72,6 @@ function buildBoard(rowsCount, colsCount) {
     GAME.board = board
 }
 
-// Dom 
 function renderBoard() {
     const { board } = GAME
     const { elBoard } = GAME.domEls
@@ -97,7 +89,6 @@ function renderBoard() {
     elBoard.innerHTML = strHTML
 }
 
-// Dom By Model || optional value //*                       Cell
 function renderCell(i, j, val) {
     // console.log(`renderCell(${i}, ${j}, ${val})`);
     const { board } = GAME
@@ -110,7 +101,6 @@ function renderCell(i, j, val) {
     else elCell.innerHTML = val
 }
 
-// Model & Dom
 function updateCell(i, j, gameObj) {
     // console.log(`UT updateCell(${i}, ${j}, ${JSON.stringify(gameObj, null, 2)})`)
     const { board } = GAME
@@ -119,13 +109,11 @@ function updateCell(i, j, gameObj) {
     renderCell(i, j)
 }
 
-// Set only Dom && timeOut render base model 
 function blinkCell(i, j, gameEl, timeout = 30) {
     renderCell(i, j, gameEl)
     setTimeout(renderCell, timeout, i, j)
 }
 
-// Update Cell X2
 function moveHero(i, j, gameObj) {
     if (!isOnBoard(i, j)) return
     const { board } = GAME
@@ -138,7 +126,6 @@ function moveHero(i, j, gameObj) {
     updateCell(pos.i, pos.j, gameObj)
 }
 
-// Shoots,hero...
 function isOnBoard(i, j) {
     const { board } = GAME
     if (
@@ -151,7 +138,6 @@ function isOnBoard(i, j) {
     return true
 }
 
-// Score
 function setScore(diff) {
     GAME.score += diff
     const { elScore } = GAME.domEls
@@ -162,7 +148,6 @@ function onToggleGame() {
     toggleAlienMove()
 }
 
-// Rocket
 function blowUpNeigs(cellI, cellJ) {
     for (let i = cellI; i <= cellI + 1; i++) {
         if (i < 0 || i > mat.length) continue

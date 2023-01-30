@@ -1,5 +1,5 @@
 # Files
 .vscode
-
+.gitignore
 # Utils Folder
-space-invaders-assets
+util

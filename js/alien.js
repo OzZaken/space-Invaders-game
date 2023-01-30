@@ -28,7 +28,6 @@ function createAliens() {
             liveAliens.push({
                 pos: { i, j },
                 gameEl: alien.gameEl,
-                // isHit: false,
                 // color: _getRandomColor(),
             })
         }
@@ -155,7 +154,6 @@ function setAliensPos() {
     const { i, j } = dirPos
 
     // Update liveAliens pos
-
     liveAliens.concat(...deadAliens).forEach(alien => {
         alien.pos.i += i
         alien.pos.j += j
@@ -173,19 +171,14 @@ function setAliensPos() {
 function getEdgePoss(edgeNum, posStr, edgeStr) {
     const { liveAliens } = GAME.alien
     const edgeAliens = liveAliens.filter(alien => alien.pos[posStr] === edgeNum)
-    console.log('edgeAliens:', edgeAliens)
     if (edgeAliens.length >= 1) {
         const edgePoss = []
-        console.log('edgePoss.push(alien.pos):', edgeAliens.forEach(alien => edgePoss.push(alien.pos)))
         return edgeAliens.forEach(alien => edgePoss.push(alien.pos))
     }
     else {
-        // only in case of moving right the edge is Smaller
         if (/colIdxEnd/.test(edgeStr)) edgeNum--
         else edgeNum++
     }
-    console.log('EdgeNum:', edgeNum)
-
     getEdgePoss(edgeNum, posStr, edgeStr)
 }
 
